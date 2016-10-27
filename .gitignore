@@ -22,3 +22,10 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Robpol86
+*.rpm
+.DS_Store
+.idea/
+cover.out
+vendor/
