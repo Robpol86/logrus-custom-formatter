@@ -1,0 +1,10 @@
+# Configure.
+clone_folder: C:\gocode\src\github.com\$(APPVEYOR_ACCOUNT_NAME)\$(APPVEYOR_PROJECT_NAME)
+environment:
+  GOPATH: C:\gocode
+  PATH: C:\msys64\usr\bin;C:\msys64\mingw32\bin;%GOPATH%\bin;%PATH%
+
+# Run.
+build_script: make bootstrap
+test_script: make
+on_success: curl -s https://codecov.io/bash |bash
