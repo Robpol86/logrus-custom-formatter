@@ -2,7 +2,8 @@
 logrus-python-formatter
 =======================
 
-Logrus formatter similar in style to Python's logging.Formatter.
+Logrus formatter similar in style to Python's
+`logging.Formatter <https://docs.python.org/3.6/library/logging.html#logrecord-attributes>`_.
 
 Windows support tested on Windows 10 after May 2016 with native ANSI color support. Previous versions of Windows won't
 display actual colors unless os.Stdout/err is intercepted and win32 API calls are made by another library. More info:
