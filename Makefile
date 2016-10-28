@@ -1,4 +1,4 @@
-.PHONY: all build clean fmt bootstrap lint test
+.PHONY: all clean fmt bootstrap lint test
 ALL_FILES = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 ALL_PKGS := $(shell glide nv |xargs go list)
 NAME := $(shell grep "^[^=]" README.rst |head -1)
@@ -23,13 +23,14 @@ lint: $(GOPATH)/bin/golint
 $(GOPATH)/bin/glide:
 	go get -u github.com/Masterminds/glide
 
-bootstrap: $(GOPATH)/bin/glide
+bootstrap vendor: $(GOPATH)/bin/glide
+	glide up
 
 ${ALL_COVER}: PKG=$(addprefix github.com/Robpol86/${NAME}/,$(dir $@))
 ${ALL_COVER}:
 	go test -coverprofile $@ $(PKG)
 
-test: clean ${ALL_COVER}
+test: vendor clean ${ALL_COVER}
 	go version
 
 fmt:
