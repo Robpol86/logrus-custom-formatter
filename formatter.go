@@ -9,8 +9,11 @@ import (
 )
 
 const (
-	// Basic formatter just logs the level name, function name, and message.
+	// Basic formatting just logs the level name, function name, and message.
 	Basic = `{{.levelname}}:{{.name}}:{{.message}}\n`
+
+	// Message formatting just logs the message.
+	Message = `{{.message}}\n`
 )
 
 // TextFormatter is the main formatter for the library.
@@ -41,7 +44,7 @@ func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	values := map[string]string{
 		"levelname": level,
 		"message":   entry.Message,
-		"name":      get(entry.Data, "loggerName"),
+		"name":      get(entry.Data, "lpfFieldName"),
 	}
 
 	// Parse entry.
