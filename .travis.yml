@@ -1,7 +1,7 @@
 # Configure.
 language: go
 go:
-  - 1.7
+  - 1.7.3
 sudo: false
 
 # Run.

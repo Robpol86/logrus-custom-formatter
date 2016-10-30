@@ -1,5 +1,5 @@
 =======================
-logrus-python-formatter
+logrus-custom-formatter
 =======================
 
 Customizable Logrus formatter similar in style to Python's

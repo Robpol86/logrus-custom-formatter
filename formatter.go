@@ -1,4 +1,4 @@
-package formatter
+package lcf
 
 import (
 	"bytes"
@@ -18,7 +18,8 @@ const (
 
 // TextFormatter is the main formatter for the library.
 type TextFormatter struct {
-	Formatting string
+	// Formatting template.
+	Template string
 }
 
 func get(data logrus.Fields, key string) string {
@@ -48,7 +49,7 @@ func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	// Parse entry.
-	if t, err := template.New("").Parse(f.Formatting); err != nil {
+	if t, err := template.New("").Parse(f.Template); err != nil {
 		return nil, err
 	} else if err := t.Execute(&buf, values); err != nil {
 		return nil, err
@@ -60,5 +61,5 @@ func (f *TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 // NewFormatter creates a new TextFormatter, sets the Format string, and returns its pointer.
 // :param format: Log messages will follow this format.
 func NewFormatter(format string) *TextFormatter {
-	return &TextFormatter{Formatting: format}
+	return &TextFormatter{Template: format}
 }
