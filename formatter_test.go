@@ -14,7 +14,7 @@ func TestNewFormatterBasic(t *testing.T) {
 
 	_, stderr, err := WithCapSys(func() {
 		ResetLogger()
-		logrus.SetFormatter(NewFormatter(Basic))
+		logrus.SetFormatter(NewFormatter(Basic, nil))
 		logrus.SetLevel(logrus.DebugLevel)
 		LogMsgs(true)
 	})
@@ -24,7 +24,7 @@ func TestNewFormatterBasic(t *testing.T) {
 	expected := []string{
 		"DEBUG:LogMsgs:Sample debug 1.",
 		"INFO:LogMsgs:Sample info 1.",
-		"WARN:LogMsgs:Sample warn 1.",
+		"WARNING:LogMsgs:Sample warn 1.",
 		"ERROR:LogMsgs:Sample error 1.",
 		"",
 	}
@@ -37,7 +37,7 @@ func TestNewFormatterMessage(t *testing.T) {
 
 	_, stderr, err := WithCapSys(func() {
 		ResetLogger()
-		logrus.SetFormatter(NewFormatter(Message))
+		logrus.SetFormatter(NewFormatter(Message, nil))
 		logrus.SetLevel(logrus.DebugLevel)
 		LogMsgs(true)
 	})

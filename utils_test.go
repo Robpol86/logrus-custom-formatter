@@ -59,7 +59,7 @@ func ResetLogger() {
 func LogMsgs(withLibFields bool) {
 	var log *logrus.Entry
 	if withLibFields {
-		log = logrus.WithField("lpfFieldName", "LogMsgs") // TODO reflection method to automate name.
+		log = logrus.WithFields(BuiltInFields(nil, "LogMsgs"))
 	} else {
 		log = logrus.NewEntry(logrus.StandardLogger())
 	}
