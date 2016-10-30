@@ -1,4 +1,4 @@
-package: github.com/Robpol86/logrus-python-formatter
+package: github.com/Robpol86/logrus-custom-formatter
 import:
 - package: github.com/Sirupsen/logrus
 testImport:

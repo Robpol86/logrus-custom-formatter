@@ -8,18 +8,10 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-// ANSI color codes.
-const (
-	Red    = 31
-	Yellow = 33
-	Blue   = 34
-	Gray   = 37
-)
-
 var _reBracketed = regexp.MustCompile(`%\[(\w+)][\w\d-]`)
 
 // Handler is the function signature of formatting attributes such as "levelName" and "message".
-type Handler func(*logrus.Entry, *TextFormatter) (interface{}, error)
+type Handler func(*logrus.Entry, *CustomFormatter) (interface{}, error)
 
 // CustomHandlers is a mapping of Handler values to attributes as key names (e.g. "levelName").
 type CustomHandlers map[string]Handler
@@ -27,47 +19,13 @@ type CustomHandlers map[string]Handler
 // Attributes is a map used like a "set" to keep track of which formatting attributes are used.
 type Attributes map[string]bool
 
-// Color colorizes the input string and returns it with ANSI color codes.
-func Color(entry *logrus.Entry, formatter *TextFormatter, s string) string {
-	// Determine if colors should be shown. Large if statement block for easier human readability.
-	isColored := false
-	if formatter.ForceColors {
-		isColored = true // ForceColors takes precedent.
-	} else if formatter.DisableColors {
-		// false.
-	} else if logrus.IsTerminal() {
-		isColored = true
-	}
-
-	// Bail if colors are disabled.
-	if !isColored {
-		return s
-	}
-
-	// Determine color.
-	var levelColor int
-	switch entry.Level {
-	case logrus.DebugLevel:
-		levelColor = Gray
-	case logrus.WarnLevel:
-		levelColor = Yellow
-	case logrus.ErrorLevel, logrus.FatalLevel, logrus.PanicLevel:
-		levelColor = Red
-	default:
-		levelColor = Blue
-	}
-
-	// Colorize.
-	return fmt.Sprintf("\033[%dm%s\033[0m", levelColor, s)
-}
-
 // HandlerLevelName returns the entry's long level name (e.g. "WARNING").
-func HandlerLevelName(entry *logrus.Entry, formatter *TextFormatter) (interface{}, error) {
+func HandlerLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
 	return Color(entry, formatter, strings.ToUpper(entry.Level.String())), nil
 }
 
 // HandlerName returns the "logger name" set by the user at the beginning of their function's call.
-func HandlerName(entry *logrus.Entry, _ *TextFormatter) (interface{}, error) {
+func HandlerName(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
 	if value, ok := entry.Data[fieldPrefix+"name"]; ok {
 		return value.(string), nil
 	}
@@ -75,7 +33,7 @@ func HandlerName(entry *logrus.Entry, _ *TextFormatter) (interface{}, error) {
 }
 
 // HandlerMessage returns the unformatted log message in the entry.
-func HandlerMessage(entry *logrus.Entry, _ *TextFormatter) (interface{}, error) {
+func HandlerMessage(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
 	return entry.Message, nil
 }
 

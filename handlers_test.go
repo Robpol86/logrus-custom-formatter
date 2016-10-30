@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func handlerOne(_ *logrus.Entry, _ *TextFormatter) (interface{}, error) {
+func handlerOne(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
 	return nil, nil
 }
 

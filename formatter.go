@@ -15,8 +15,8 @@ const (
 	Message = `%[message]s\n`
 )
 
-// TextFormatter is the main formatter for the library.
-type TextFormatter struct {
+// CustomFormatter is the main formatter for the library.
+type CustomFormatter struct {
 	// Post-processed formatting template (e.g. `%[1]s:%[2]s:%[3]s\n`).
 	Template string
 
@@ -34,7 +34,7 @@ type TextFormatter struct {
 }
 
 // Format is called by logrus and returns the formatted string.
-func (f TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+func (f CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// Call handlers.
 	values := make([]interface{}, len(f.Handlers))
 	for i, handler := range f.Handlers {
@@ -50,13 +50,13 @@ func (f TextFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return bytes.NewBufferString(parsed).Bytes(), nil
 }
 
-// NewFormatter creates a new TextFormatter, sets the Template string, and returns its pointer.
+// NewFormatter creates a new CustomFormatter, sets the Template string, and returns its pointer.
 // This function is usually called just once during a running program's lifetime.
 // :param template: Pre-processed formatting template (e.g. `%[message]s\n`).
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 // 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
-func NewFormatter(template string, custom CustomHandlers) *TextFormatter {
-	formatter := TextFormatter{}
+func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
+	formatter := CustomFormatter{}
 	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
 	return &formatter
 }

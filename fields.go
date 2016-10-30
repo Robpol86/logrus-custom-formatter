@@ -8,7 +8,7 @@ const fieldPrefix = "lcfField_"
 
 // BuiltInFields collects data from the calling function to expose it to the handlers.
 // This function is usually called once per caller function's call regardless of how many log statements are emitted.
-// :param formatter: lcf.TextFormatter instance from your logger if different from the one in the logrus StandardLogger.
+// :param formatter: lcf.CustomFormatter instance from your logger if different from the one in logrus StandardLogger.
 // :param name: The "logger name". This is the value for the "%[name]s" attribute.
 func BuiltInFields(formatter logrus.Formatter, name string) logrus.Fields {
 	fields := logrus.Fields{}
@@ -21,8 +21,8 @@ func BuiltInFields(formatter logrus.Formatter, name string) logrus.Fields {
 	// Get attributes from formatter.
 	var attributes Attributes
 	switch formatter.(type) {
-	case *TextFormatter:
-		attributes = formatter.(*TextFormatter).Attributes
+	case *CustomFormatter:
+		attributes = formatter.(*CustomFormatter).Attributes
 	default:
 		return fields
 	}
