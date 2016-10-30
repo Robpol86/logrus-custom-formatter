@@ -3,6 +3,7 @@ package lcf
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
@@ -19,6 +20,41 @@ type CustomHandlers map[string]Handler
 // Attributes is a map used like a "set" to keep track of which formatting attributes are used.
 type Attributes map[string]bool
 
+// HandlerFields returns the entry's fields (excluding built-in fields) colorized according to log level.
+// Fields' formatting: key=value key2=value2
+func HandlerFields(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
+	var fields string
+
+	// Without sorting no need to get keys from map into a string array.
+	if formatter.DisableSorting {
+		for key, value := range entry.Data {
+			if strings.HasPrefix(key, FieldPrefix) {
+				continue
+			}
+			fields = fmt.Sprintf("%s %s=%v", fields, Color(entry, formatter, key), value)
+		}
+		return fields, nil
+	}
+
+	// Put keys in a string array and sort it.
+	keys := make([]string, len(entry.Data))
+	i := 0
+	for k := range entry.Data {
+		keys[i] = k
+		i++
+	}
+	sort.Strings(keys)
+
+	// Do the rest.
+	for _, key := range keys {
+		if strings.HasPrefix(key, FieldPrefix) {
+			continue
+		}
+		fields = fmt.Sprintf("%s %s=%v", fields, Color(entry, formatter, key), entry.Data[key])
+	}
+	return fields, nil
+}
+
 // HandlerLevelName returns the entry's long level name (e.g. "WARNING").
 func HandlerLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
 	return Color(entry, formatter, strings.ToUpper(entry.Level.String())), nil
@@ -26,7 +62,7 @@ func HandlerLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interfac
 
 // HandlerName returns the "logger name" set by the user at the beginning of their function's call.
 func HandlerName(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
-	if value, ok := entry.Data[fieldPrefix+"name"]; ok {
+	if value, ok := entry.Data[FieldPrefix+"name"]; ok {
 		return value.(string), nil
 	}
 	return "", nil
@@ -52,6 +88,8 @@ func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, A
 			handlers = append(handlers, f)
 		} else {
 			switch attribute {
+			case "fields":
+				handlers = append(handlers, HandlerFields)
 			case "levelName":
 				handlers = append(handlers, HandlerLevelName)
 			case "name":

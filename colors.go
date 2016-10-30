@@ -22,7 +22,7 @@ func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
 		isColored = true // ForceColors takes precedent.
 	} else if formatter.DisableColors {
 		// false.
-	} else if logrus.IsTerminal() {
+	} else if formatter.isTerminal {
 		isColored = true
 	}
 

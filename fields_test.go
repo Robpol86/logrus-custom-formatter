@@ -12,7 +12,7 @@ func TestBuiltInFieldsManuallyDefined(t *testing.T) {
 	log := logrus.New()
 	log.Formatter = NewFormatter(Basic, nil)
 	fields := BuiltInFields(log.Formatter, "testing")
-	assert.Equal("testing", fields[fieldPrefix+"name"])
+	assert.Equal("testing", fields[FieldPrefix+"name"])
 }
 
 func TestBuiltInFieldsAutoValid(t *testing.T) {
@@ -20,12 +20,12 @@ func TestBuiltInFieldsAutoValid(t *testing.T) {
 	defer ResetLogger() // Cleanup after test.
 	logrus.SetFormatter(NewFormatter(Basic, nil))
 	fields := BuiltInFields(nil, "testing2")
-	assert.Equal("testing2", fields[fieldPrefix+"name"])
+	assert.Equal("testing2", fields[FieldPrefix+"name"])
 }
 
 func TestBuiltInFieldsInvalid(t *testing.T) {
 	assert := require.New(t)
 	defer ResetLogger() // Cleanup after test.
 	fields := BuiltInFields(nil, "testing3")
-	assert.Nil(fields[fieldPrefix+"name"])
+	assert.Nil(fields[FieldPrefix+"name"])
 }

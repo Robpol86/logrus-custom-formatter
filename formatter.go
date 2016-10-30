@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	// Basic formatting just logs the level name, function name, and message.
-	Basic = `%[levelName]s:%[name]s:%[message]s\n`
+	// Basic formatting just logs the level name, function name, message and fields.
+	Basic = `%[levelName]s:%[name]s:%[message]s%[fields]s\n`
 
-	// Message formatting just logs the message.
-	Message = `%[message]s\n`
+	// Message formatting just logs the message and fields.
+	Message = `%[message]s%[fields]s\n`
 )
 
 // CustomFormatter is the main formatter for the library.
@@ -31,6 +31,13 @@ type CustomFormatter struct {
 
 	// Force disabling colors.
 	DisableColors bool
+
+	// The fields are sorted by default for a consistent output. For applications
+	// that log extremely frequently and don't use the JSON formatter this may not
+	// be desired.
+	DisableSorting bool
+
+	isTerminal bool
 }
 
 // Format is called by logrus and returns the formatted string.
@@ -56,7 +63,7 @@ func (f CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 // 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
 func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
-	formatter := CustomFormatter{}
+	formatter := CustomFormatter{isTerminal: logrus.IsTerminal()}
 	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
 	return &formatter
 }

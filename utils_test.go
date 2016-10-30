@@ -55,21 +55,21 @@ func ResetLogger() {
 }
 
 // Log sample messages to logrus.
-// :param withLibFields: Creates logger with fields specific to this library.
-func LogMsgs(withLibFields bool) {
+// :param builtInFields: Creates logger with fields specific to this library.
+func LogMsgs(builtInFields bool) {
 	var log *logrus.Entry
-	if withLibFields {
+	if builtInFields {
 		log = logrus.WithFields(BuiltInFields(nil, "LogMsgs"))
 	} else {
 		log = logrus.NewEntry(logrus.StandardLogger())
 	}
 
 	log.Debug("Sample debug 1.")
-	// log.WithFields(logrus.Fields{"a": "b", "c": 10}).Debug("Sample debug 2.")
+	log.WithFields(logrus.Fields{"a": "b", "c": 10}).Debug("Sample debug 2.")
 	log.Info("Sample info 1.")
-	// log.WithFields(logrus.Fields{"a": "b", "c": 10}).Info("Sample info 2.")
+	log.WithFields(logrus.Fields{"a": "b", "c": 10}).Info("Sample info 2.")
 	log.Warn("Sample warn 1.")
-	// log.WithFields(logrus.Fields{"a": "b", "c": 10}).Warn("Sample warn 2.")
+	log.WithFields(logrus.Fields{"a": "b", "c": 10}).Warn("Sample warn 2.")
 	log.Error("Sample error 1.")
-	// log.WithFields(logrus.Fields{"a": "b", "c": 10}).Error("Sample error 2.")
+	log.WithFields(logrus.Fields{"a": "b", "c": 10}).Error("Sample error 2.")
 }

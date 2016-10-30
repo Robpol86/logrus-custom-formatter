@@ -4,7 +4,9 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-const fieldPrefix = "lcfField_"
+// FieldPrefix is the string prefix in field keys in entry.Data used internally by this library. It allows us to
+// differentiate between user-defined fields and lcf-defined fields since all fields are in the same namespace.
+const FieldPrefix = "lcfField_"
 
 // BuiltInFields collects data from the calling function to expose it to the handlers.
 // This function is usually called once per caller function's call regardless of how many log statements are emitted.
@@ -29,7 +31,7 @@ func BuiltInFields(formatter logrus.Formatter, name string) logrus.Fields {
 
 	// Only populate fields that need to be populated.
 	if _, ok := attributes["name"]; ok {
-		fields[fieldPrefix+"name"] = name
+		fields[FieldPrefix+"name"] = name
 	}
 
 	return fields
