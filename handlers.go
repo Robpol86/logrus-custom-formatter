@@ -2,6 +2,7 @@ package lcf
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -81,11 +82,8 @@ func HandlerMessage(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error
 }
 
 // HandlerProcess returns the current process' PID.
-func HandlerProcess(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
-	if value, ok := entry.Data[FieldPrefix+"process"]; ok {
-		return value.(int), nil
-	}
-	return 0, nil
+func HandlerProcess(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
+	return os.Getpid(), nil
 }
 
 // HandlerRelativeCreated returns the number of seconds since program start time.

@@ -1,8 +1,6 @@
 package lcf
 
 import (
-	"os"
-
 	"github.com/Sirupsen/logrus"
 )
 
@@ -34,9 +32,6 @@ func BuiltInFields(formatter logrus.Formatter, name string) logrus.Fields {
 	// Only populate fields that need to be populated.
 	if _, ok := attributes["name"]; ok {
 		fields[FieldPrefix+"name"] = name
-	}
-	if _, ok := attributes["process"]; ok {
-		fields[FieldPrefix+"process"] = os.Getpid()
 	}
 
 	return fields
