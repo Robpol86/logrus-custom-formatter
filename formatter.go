@@ -38,9 +38,6 @@ type CustomFormatter struct {
 	// Force disabling colors and bypass checking for a TTY.
 	DisableColors bool
 
-	// %[ascTime]s will log just the time passed since beginning of execution.
-	ShortTimestamp bool
-
 	// Timestamp format %[ascTime]s will use for display when a full timestamp is printed.
 	TimestampFormat string
 

@@ -24,9 +24,6 @@ type Attributes map[string]bool
 
 // HandlerAscTime returns the formatted timestamp of the entry.
 func HandlerAscTime(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
-	if formatter.ShortTimestamp {
-		return int(time.Since(_startTime) / time.Second), nil
-	}
 	return entry.Time.Format(formatter.TimestampFormat), nil
 }
 
@@ -91,6 +88,11 @@ func HandlerProcess(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error
 	return 0, nil
 }
 
+// HandlerRelativeCreated returns the number of seconds since program start time.
+func HandlerRelativeCreated(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
+	return int(time.Since(_startTime) / time.Second), nil
+}
+
 // HandlerShortLevelName returns the entry's short level name (e.g. "WARN").
 func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
 	if entry.Level == logrus.WarnLevel {
@@ -126,6 +128,8 @@ func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, A
 				handlers = append(handlers, HandlerMessage)
 			case "process":
 				handlers = append(handlers, HandlerProcess)
+			case "relativeCreated":
+				handlers = append(handlers, HandlerRelativeCreated)
 			case "shortLevelName":
 				handlers = append(handlers, HandlerShortLevelName)
 			default:

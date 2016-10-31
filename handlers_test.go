@@ -46,23 +46,11 @@ func TestHandlerAscTime(t *testing.T) {
 	entry := logrus.NewEntry(logrus.New())
 	entry.Level = logrus.ErrorLevel
 
-	// Test long timestamp.
+	// Test.
 	fields, err := HandlerAscTime(entry, &formatter)
 	assert.NoError(err)
 	actual := fields.(string)
 	assert.Regexp(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}$`, actual)
-
-	// Test short timestamp.
-	formatter.ShortTimestamp = true
-	var values [2]int
-	fields, err = HandlerAscTime(entry, &formatter)
-	assert.NoError(err)
-	values[0] = fields.(int)
-	time.Sleep(time.Second * 2)
-	fields, err = HandlerAscTime(entry, &formatter)
-	assert.NoError(err)
-	values[1] = fields.(int)
-	assert.True(values[0] < values[1])
 }
 
 func TestHandlerFields(t *testing.T) {
@@ -102,4 +90,19 @@ func TestHandlerFields(t *testing.T) {
 	assert.Contains(actual, "3=false")
 	assert.Contains(actual, "one=1")
 	assert.Contains(actual, "two=2")
+}
+
+func TestHandlerRelativeCreated(t *testing.T) {
+	assert := require.New(t)
+
+	// Test.
+	var values [2]int
+	fields, err := HandlerRelativeCreated(nil, nil)
+	assert.NoError(err)
+	values[0] = fields.(int)
+	time.Sleep(time.Second * 2)
+	fields, err = HandlerRelativeCreated(nil, nil)
+	assert.NoError(err)
+	values[1] = fields.(int)
+	assert.True(values[0] < values[1])
 }
