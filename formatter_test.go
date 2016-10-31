@@ -1,10 +1,14 @@
 package lcf
 
 import (
+	"fmt"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/rifflock/lfshook"
 	"github.com/stretchr/testify/require"
 )
 
@@ -73,56 +77,80 @@ func TestNewFormatterColors(t *testing.T) {
 	}
 }
 
-func TestNewFormatterBasic(t *testing.T) {
-	assert := require.New(t)
-	defer ResetLogger() // Cleanup after test.
+func runFormatterTest(assert *require.Assertions, template string, toFile bool) []string {
+	var logFile string
+	if toFile {
+		tmpdir, err := ioutil.TempDir("", "")
+		logFile = filepath.Join(tmpdir, "sample.log")
+		assert.NoError(err)
+	}
 
+	// Run.
+	defer ResetLogger() // Cleanup after test.
 	_, stderr, err := WithCapSys(func() {
 		ResetLogger()
-		logrus.SetFormatter(NewFormatter(Basic, nil))
+		logrus.SetFormatter(NewFormatter(template, nil))
 		logrus.SetLevel(logrus.DebugLevel)
+		if toFile {
+			pathMap := lfshook.PathMap{}
+			for _, level := range logrus.AllLevels {
+				pathMap[level] = logFile
+			}
+			logrus.AddHook(lfshook.NewHook(pathMap))
+			logrus.SetOutput(ioutil.Discard)
+		}
 		LogMsgs(true)
 	})
 	assert.NoError(err)
 
-	actual := strings.Split(stderr, `\n`)
-	expected := []string{
-		"DEBUG:LogMsgs:Sample debug 1.",
-		"DEBUG:LogMsgs:Sample debug 2. a=b c=10",
-		"INFO:LogMsgs:Sample info 1.",
-		"INFO:LogMsgs:Sample info 2. a=b c=10",
-		"WARNING:LogMsgs:Sample warn 1.",
-		"WARNING:LogMsgs:Sample warn 2. a=b c=10",
-		"ERROR:LogMsgs:Sample error 1.",
-		"ERROR:LogMsgs:Sample error 2. a=b c=10",
-		"",
+	// Read.
+	if toFile {
+		assert.Empty(stderr)
+		contents, err := ioutil.ReadFile(logFile)
+		assert.NoError(err)
+		return strings.Split(string(contents), `\n`)
 	}
-	assert.Equal(expected, actual)
+	return strings.Split(stderr, `\n`)
+}
+
+func TestNewFormatterBasic(t *testing.T) {
+	for _, toFile := range []bool{false, true} {
+		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
+			assert := require.New(t)
+			actual := runFormatterTest(assert, Basic, toFile)
+			expected := []string{
+				"DEBUG:LogMsgs:Sample debug 1.",
+				"DEBUG:LogMsgs:Sample debug 2. a=b c=10",
+				"INFO:LogMsgs:Sample info 1.",
+				"INFO:LogMsgs:Sample info 2. a=b c=10",
+				"WARNING:LogMsgs:Sample warn 1.",
+				"WARNING:LogMsgs:Sample warn 2. a=b c=10",
+				"ERROR:LogMsgs:Sample error 1.",
+				"ERROR:LogMsgs:Sample error 2. a=b c=10",
+				"",
+			}
+			assert.Equal(expected, actual)
+		})
+	}
 }
 
 func TestNewFormatterMessage(t *testing.T) {
-	assert := require.New(t)
-	defer ResetLogger() // Cleanup after test.
-
-	_, stderr, err := WithCapSys(func() {
-		ResetLogger()
-		logrus.SetFormatter(NewFormatter(Message, nil))
-		logrus.SetLevel(logrus.DebugLevel)
-		LogMsgs(true)
-	})
-	assert.NoError(err)
-
-	actual := strings.Split(stderr, `\n`)
-	expected := []string{
-		"Sample debug 1.",
-		"Sample debug 2. a=b c=10",
-		"Sample info 1.",
-		"Sample info 2. a=b c=10",
-		"Sample warn 1.",
-		"Sample warn 2. a=b c=10",
-		"Sample error 1.",
-		"Sample error 2. a=b c=10",
-		"",
+	for _, toFile := range []bool{false, true} {
+		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
+			assert := require.New(t)
+			actual := runFormatterTest(assert, Message, toFile)
+			expected := []string{
+				"Sample debug 1.",
+				"Sample debug 2. a=b c=10",
+				"Sample info 1.",
+				"Sample info 2. a=b c=10",
+				"Sample warn 1.",
+				"Sample warn 2. a=b c=10",
+				"Sample error 1.",
+				"Sample error 2. a=b c=10",
+				"",
+			}
+			assert.Equal(expected, actual)
+		})
 	}
-	assert.Equal(expected, actual)
 }

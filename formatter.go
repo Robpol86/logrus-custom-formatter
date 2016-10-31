@@ -29,15 +29,15 @@ type CustomFormatter struct {
 	// Set to true to bypass checking for a TTY before outputting colors.
 	ForceColors bool
 
-	// Force disabling colors.
+	// Force disabling colors and bypass checking for a TTY.
 	DisableColors bool
 
 	// The fields are sorted by default for a consistent output. For applications
-	// that log extremely frequently and don't use the JSON formatter this may not
-	// be desired.
+	// that log extremely frequently this may not be desired.
 	DisableSorting bool
 
-	isTerminal bool
+	isTerminal          bool
+	isWindowsNativeAnsi bool
 }
 
 // Format is called by logrus and returns the formatted string.
@@ -63,7 +63,10 @@ func (f CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 // 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
 func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
-	formatter := CustomFormatter{isTerminal: logrus.IsTerminal()}
+	formatter := CustomFormatter{
+		isTerminal:          logrus.IsTerminal(),
+		isWindowsNativeAnsi: WindowsNativeANSI(),
+	}
 	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
 	return &formatter
 }

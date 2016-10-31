@@ -2,6 +2,7 @@ package lcf
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -22,7 +23,7 @@ func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
 		isColored = true // ForceColors takes precedent.
 	} else if formatter.DisableColors {
 		// false.
-	} else if formatter.isTerminal {
+	} else if formatter.isTerminal && (runtime.GOOS != "windows" || formatter.isWindowsNativeAnsi) {
 		isColored = true
 	}
 
