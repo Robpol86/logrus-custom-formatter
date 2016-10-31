@@ -13,6 +13,12 @@ const (
 
 	// Message formatting just logs the message and fields.
 	Message = `%[message]s%[fields]s\n`
+
+	// Detailed formatting logs padded columns including the running PID.
+	Detailed = `%[ascTime]s %-5[process]d %-5[shortLevelName]s %-20[name]s %[message]s%[fields]s\n`
+
+	// DefaultTimestampFormat is the default format used if the user does not specify their own.
+	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
 )
 
 // CustomFormatter is the main formatter for the library.
@@ -31,6 +37,12 @@ type CustomFormatter struct {
 
 	// Force disabling colors and bypass checking for a TTY.
 	DisableColors bool
+
+	// %[ascTime]s will log just the time passed since beginning of execution.
+	ShortTimestamp bool
+
+	// Timestamp format %[ascTime]s will use for display when a full timestamp is printed.
+	TimestampFormat string
 
 	// The fields are sorted by default for a consistent output. For applications
 	// that log extremely frequently this may not be desired.
@@ -66,6 +78,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter := CustomFormatter{
 		isTerminal:          logrus.IsTerminal(),
 		isWindowsNativeAnsi: WindowsNativeANSI(),
+		TimestampFormat:     DefaultTimestampFormat,
 	}
 	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
 	return &formatter

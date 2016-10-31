@@ -2,6 +2,7 @@ package lcf
 
 import (
 	"testing"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/stretchr/testify/require"
@@ -35,6 +36,33 @@ func TestParseTemplateBuiltIn(t *testing.T) {
 	assert.True(attributes["name"])
 	assert.True(attributes["message"])
 	assert.True(attributes["fields"])
+}
+
+func TestHandlerAscTime(t *testing.T) {
+	assert := require.New(t)
+
+	// Setup.
+	formatter := CustomFormatter{TimestampFormat: DefaultTimestampFormat}
+	entry := logrus.NewEntry(logrus.New())
+	entry.Level = logrus.ErrorLevel
+
+	// Test long timestamp.
+	fields, err := HandlerAscTime(entry, &formatter)
+	assert.NoError(err)
+	actual := fields.(string)
+	assert.Regexp(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}$`, actual)
+
+	// Test short timestamp.
+	formatter.ShortTimestamp = true
+	var values [2]int
+	fields, err = HandlerAscTime(entry, &formatter)
+	assert.NoError(err)
+	values[0] = fields.(int)
+	time.Sleep(time.Second * 2)
+	fields, err = HandlerAscTime(entry, &formatter)
+	assert.NoError(err)
+	values[1] = fields.(int)
+	assert.True(values[0] < values[1])
 }
 
 func TestHandlerFields(t *testing.T) {

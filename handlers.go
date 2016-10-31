@@ -5,11 +5,13 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 )
 
-var _reBracketed = regexp.MustCompile(`%\[(\w+)][\w\d-]`)
+var _reBracketed = regexp.MustCompile(`%[\d-]*\[(\w+)]\w`)
+var _startTime = time.Now()
 
 // Handler is the function signature of formatting attributes such as "levelName" and "message".
 type Handler func(*logrus.Entry, *CustomFormatter) (interface{}, error)
@@ -19,6 +21,14 @@ type CustomHandlers map[string]Handler
 
 // Attributes is a map used like a "set" to keep track of which formatting attributes are used.
 type Attributes map[string]bool
+
+// HandlerAscTime returns the formatted timestamp of the entry.
+func HandlerAscTime(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
+	if formatter.ShortTimestamp {
+		return int(time.Since(_startTime) / time.Second), nil
+	}
+	return entry.Time.Format(formatter.TimestampFormat), nil
+}
 
 // HandlerFields returns the entry's fields (excluding built-in fields) colorized according to log level.
 // Fields' formatting: key=value key2=value2
@@ -73,6 +83,22 @@ func HandlerMessage(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error
 	return entry.Message, nil
 }
 
+// HandlerProcess returns the current process' PID.
+func HandlerProcess(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
+	if value, ok := entry.Data[FieldPrefix+"process"]; ok {
+		return value.(int), nil
+	}
+	return 0, nil
+}
+
+// HandlerShortLevelName returns the entry's short level name (e.g. "WARN").
+func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
+	if entry.Level == logrus.WarnLevel {
+		return Color(entry, formatter, "WARN"), nil
+	}
+	return Color(entry, formatter, strings.ToUpper(entry.Level.String())), nil
+}
+
 // ParseTemplate parses the template string and prepares it for fmt.Sprintf() and keeps track of which handlers to use.
 // :param template: Pre-processed formatting template (e.g. `%[message]s\n`).
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
@@ -88,6 +114,8 @@ func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, A
 			handlers = append(handlers, f)
 		} else {
 			switch attribute {
+			case "ascTime":
+				handlers = append(handlers, HandlerAscTime)
 			case "fields":
 				handlers = append(handlers, HandlerFields)
 			case "levelName":
@@ -96,6 +124,10 @@ func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, A
 				handlers = append(handlers, HandlerName)
 			case "message":
 				handlers = append(handlers, HandlerMessage)
+			case "process":
+				handlers = append(handlers, HandlerProcess)
+			case "shortLevelName":
+				handlers = append(handlers, HandlerShortLevelName)
 			default:
 				continue
 			}

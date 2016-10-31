@@ -3,7 +3,9 @@ package lcf
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -149,6 +151,39 @@ func TestNewFormatterMessage(t *testing.T) {
 				"Sample error 1.",
 				"Sample error 2. a=b c=10",
 				"",
+			}
+			assert.Equal(expected, actual)
+		})
+	}
+}
+
+func TestNewFormatterDetailed(t *testing.T) {
+	reTimestamp := regexp.MustCompile(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}`)
+
+	for _, toFile := range []bool{false, true} {
+		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
+			assert := require.New(t)
+			actual := runFormatterTest(assert, Detailed, toFile)
+			for i, str := range actual {
+				if str != "" {
+					actual[i] = reTimestamp.ReplaceAllString(str, "2016-10-30 19:12:17.149")
+				}
+			}
+			expected := []string{
+				"2016-10-30 19:12:17.149 %s DEBUG LogMsgs              Sample debug 1.",
+				"2016-10-30 19:12:17.149 %s DEBUG LogMsgs              Sample debug 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s INFO  LogMsgs              Sample info 1.",
+				"2016-10-30 19:12:17.149 %s INFO  LogMsgs              Sample info 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s WARN  LogMsgs              Sample warn 1.",
+				"2016-10-30 19:12:17.149 %s WARN  LogMsgs              Sample warn 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s ERROR LogMsgs              Sample error 1.",
+				"2016-10-30 19:12:17.149 %s ERROR LogMsgs              Sample error 2. a=b c=10",
+				"",
+			}
+			for i, str := range expected {
+				if str != "" {
+					expected[i] = fmt.Sprintf(str, fmt.Sprintf("%-5d", os.Getpid()))
+				}
 			}
 			assert.Equal(expected, actual)
 		})
