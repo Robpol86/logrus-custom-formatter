@@ -11,8 +11,8 @@ const (
 	// Basic formatting just logs the level name, function name, message and fields.
 	Basic = `%[levelName]s:%[name]s:%[message]s%[fields]s\n`
 
-	// Message formatting just logs the message and fields.
-	Message = `%[message]s%[fields]s\n`
+	// Message formatting just logs the message.
+	Message = `%[message]s\n`
 
 	// Detailed formatting logs padded columns including the running PID.
 	Detailed = `%[ascTime]s %-5[process]d %-5[shortLevelName]s %-20[name]s %[message]s%[fields]s\n`

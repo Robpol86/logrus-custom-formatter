@@ -143,13 +143,13 @@ func TestNewFormatterMessage(t *testing.T) {
 			actual := runFormatterTest(assert, Message, toFile)
 			expected := []string{
 				"Sample debug 1.",
-				"Sample debug 2. a=b c=10",
+				"Sample debug 2.",
 				"Sample info 1.",
-				"Sample info 2. a=b c=10",
+				"Sample info 2.",
 				"Sample warn 1.",
-				"Sample warn 2. a=b c=10",
+				"Sample warn 2.",
 				"Sample error 1.",
-				"Sample error 2. a=b c=10",
+				"Sample error 2.",
 				"",
 			}
 			assert.Equal(expected, actual)
