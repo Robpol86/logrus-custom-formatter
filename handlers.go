@@ -23,6 +23,12 @@ type CustomHandlers map[string]Handler
 // Attributes is a map used like a "set" to keep track of which formatting attributes are used.
 type Attributes map[string]bool
 
+// Contains returns true if attr is present.
+func (a Attributes) Contains(attr string) bool {
+	_, ok := a[attr]
+	return ok
+}
+
 // HandlerAscTime returns the formatted timestamp of the entry.
 func HandlerAscTime(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
 	return entry.Time.Format(formatter.TimestampFormat), nil

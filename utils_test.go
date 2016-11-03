@@ -59,7 +59,7 @@ func ResetLogger() {
 func LogMsgs(builtInFields bool) {
 	var log *logrus.Entry
 	if builtInFields {
-		log = logrus.WithFields(BuiltInFields(nil, "LogMsgs"))
+		log = logrus.WithFields(BuiltInFields(nil, CallerName(1)))
 	} else {
 		log = logrus.NewEntry(logrus.StandardLogger())
 	}

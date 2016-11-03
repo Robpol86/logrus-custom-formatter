@@ -30,7 +30,7 @@ func BuiltInFields(formatter logrus.Formatter, name string) logrus.Fields {
 	}
 
 	// Only populate fields that need to be populated.
-	if _, ok := attributes["name"]; ok {
+	if attributes.Contains("name") {
 		fields[FieldPrefix+"name"] = name
 	}
 
