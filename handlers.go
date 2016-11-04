@@ -34,7 +34,7 @@ func HandlerAscTime(entry *logrus.Entry, formatter *CustomFormatter) (interface{
 	return entry.Time.Format(formatter.TimestampFormat), nil
 }
 
-// HandlerFields returns the entry's fields (excluding built-in fields) colorized according to log level.
+// HandlerFields returns the entry's fields (excluding name field if %[name]s is used) colorized according to log level.
 // Fields' formatting: key=value key2=value2
 func HandlerFields(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
 	var fields string
