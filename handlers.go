@@ -42,7 +42,7 @@ func HandlerFields(entry *logrus.Entry, formatter *CustomFormatter) (interface{}
 	// Without sorting no need to get keys from map into a string array.
 	if formatter.DisableSorting {
 		for key, value := range entry.Data {
-			if strings.HasPrefix(key, FieldPrefix) {
+			if key == "name" && formatter.Attributes.Contains("name") {
 				continue
 			}
 			fields = fmt.Sprintf("%s %s=%v", fields, Color(entry, formatter, key), value)
@@ -61,7 +61,7 @@ func HandlerFields(entry *logrus.Entry, formatter *CustomFormatter) (interface{}
 
 	// Do the rest.
 	for _, key := range keys {
-		if strings.HasPrefix(key, FieldPrefix) {
+		if key == "name" && formatter.Attributes.Contains("name") {
 			continue
 		}
 		fields = fmt.Sprintf("%s %s=%v", fields, Color(entry, formatter, key), entry.Data[key])
@@ -74,9 +74,9 @@ func HandlerLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interfac
 	return Color(entry, formatter, strings.ToUpper(entry.Level.String())), nil
 }
 
-// HandlerName returns the "logger name" set by the user at the beginning of their function's call.
+// HandlerName returns the name field value set by the user in entry.Data.
 func HandlerName(entry *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
-	if value, ok := entry.Data[FieldPrefix+"name"]; ok {
+	if value, ok := entry.Data["name"]; ok {
 		return value.(string), nil
 	}
 	return "", nil

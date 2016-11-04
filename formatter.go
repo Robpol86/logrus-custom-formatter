@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	// Basic formatting just logs the level name, function name, message and fields.
+	// Basic formatting just logs the level name, name field, message and fields.
 	Basic = `%[levelName]s:%[name]s:%[message]s%[fields]s\n`
 
 	// Message formatting just logs the message.
