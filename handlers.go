@@ -103,7 +103,9 @@ func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (int
 }
 
 // ParseTemplate parses the template string and prepares it for fmt.Sprintf() and keeps track of which handlers to use.
+//
 // :param template: Pre-processed formatting template (e.g. `%[message]s\n`).
+//
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, Attributes) {
 	attributes := make(Attributes)

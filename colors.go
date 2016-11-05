@@ -48,3 +48,22 @@ func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
 	// Colorize.
 	return fmt.Sprintf("\033[%dm%s\033[0m", levelColor, s)
 }
+
+// WindowsNativeANSI returns true if either the stderr or stdout consoles natively support ANSI color codes. On
+// non-Windows platforms this always returns false.
+func WindowsNativeANSI() bool {
+	enabled, _ := windowsNativeANSI(true, false)
+	if enabled {
+		return enabled
+	}
+	enabled, _ = windowsNativeANSI(false, false)
+	return enabled
+}
+
+// WindowsEnableNativeANSI will attempt to set ENABLE_VIRTUAL_TERMINAL_PROCESSING on a console using SetConsoleMode.
+//
+// :param stderr: Issue SetConsoleMode win32 API call on stderr instead of stdout handle.
+func WindowsEnableNativeANSI(stderr bool) error {
+	_, err := windowsNativeANSI(stderr, true)
+	return err
+}

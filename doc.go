@@ -2,9 +2,17 @@
 Package lcf (logrus-custom-formatter) is a customizable formatter for https://github.com/Sirupsen/logrus that lets you
 choose which columns to include in your log outputs.
 
-Windows support tested on Windows 10 after May 2016 with native ANSI color support. Previous versions of Windows won't
-display actual colors unless os.Stdout/err is intercepted and win32 API calls are made by another library. More info:
-https://github.com/Robpol86/colorclass/blob/c7ed6d/colorclass/windows.py#L113
+Windows Support
+
+Unlike Linux/OS X, Windows kind of doesn't support ANSI color codes. Windows versions before Windows 10 Insider Edition
+around May 2016 do not support ANSI color codes (instead your program is supposed to issue win32 API calls before each
+character to display if its color changes) and lcf will disable colors on those platforms by default. Windows version
+after that do actually support ANSI color codes but is disabled by default. lcf will detect this and disable colors by
+default if this feature (ENABLE_VIRTUAL_TERMINAL_PROCESSING) is not enabled.
+
+You can enable ENABLE_VIRTUAL_TERMINAL_PROCESSING by calling lcf.WindowsEnableNativeANSI(true) in your program (logrus
+by default only outputs to stderr, call with false if you're printing to stdout instead). More information in the
+WindowsEnableNativeANSI documentation below.
 
 Example Usage
 
@@ -18,6 +26,7 @@ Below is a simple example program that uses lcf with logrus:
 	)
 
 	func main() {
+		lcf.WindowsEnableNativeANSI(true) // Ignored on non-Windows.
 		template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
 		logrus.SetFormatter(lcf.NewFormatter(template, nil))
 		logrus.SetLevel(logrus.DebugLevel)
@@ -31,7 +40,7 @@ Below is a simple example program that uses lcf with logrus:
 		logrus.Fatal("The ice breaks!")
 	}
 
-And its output is:
+And the output is:
 
 	DEBU[0000] A group of walrus emerges from the ocean      animal=walrus size=10
 	WARN[0000] The group's number increased tremendously!    animal=walrus size=10

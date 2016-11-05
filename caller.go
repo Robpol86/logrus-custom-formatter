@@ -6,6 +6,7 @@ import (
 )
 
 // CallerName returns the name of the calling function using the runtime package. Empty string if something fails.
+//
 // :param skip: Skip these many calls in the stack.
 func CallerName(skip int) string {
 	if pc, _, _, ok := runtime.Caller(skip); ok {

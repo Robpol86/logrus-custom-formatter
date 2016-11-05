@@ -2,7 +2,6 @@
 
 package lcf
 
-// WindowsNativeANSI will always return false if the compiler builds this file instead of colors_windows.go.
-func WindowsNativeANSI() bool {
-	return false
+func windowsNativeANSI(_ bool, _ bool) (bool, error) {
+	return false, nil
 }

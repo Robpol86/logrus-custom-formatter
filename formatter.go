@@ -68,7 +68,9 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 // NewFormatter creates a new CustomFormatter, sets the Template string, and returns its pointer.
 // This function is usually called just once during a running program's lifetime.
+//
 // :param template: Pre-processed formatting template (e.g. `%[message]s\n`).
+//
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 // 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
 func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
