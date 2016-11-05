@@ -50,11 +50,11 @@ type CustomFormatter struct {
 }
 
 // Format is called by logrus and returns the formatted string.
-func (f CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	// Call handlers.
 	values := make([]interface{}, len(f.Handlers))
 	for i, handler := range f.Handlers {
-		value, err := handler(entry, &f)
+		value, err := handler(entry, f)
 		if err != nil {
 			return nil, err
 		}

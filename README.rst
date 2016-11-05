@@ -9,16 +9,16 @@ Customizable Logrus formatter similar in style to Python's
 
 📖 Full documentation: https://godoc.org/github.com/Robpol86/logrus-custom-formatter
 
-.. image:: https://img.shields.io/appveyor/ci/Robpol86/logrus-python-formatter/master.svg?style=flat-square&label=AppVeyor%20CI
-    :target: https://ci.appveyor.com/project/Robpol86/logrus-python-formatter
+.. image:: https://img.shields.io/appveyor/ci/Robpol86/logrus-custom-formatter/master.svg?style=flat-square&label=AppVeyor%20CI
+    :target: https://ci.appveyor.com/project/Robpol86/logrus-custom-formatter
     :alt: Build Status Windows
 
-.. image:: https://img.shields.io/travis/Robpol86/logrus-python-formatter/master.svg?style=flat-square&label=Travis%20CI
-    :target: https://travis-ci.org/Robpol86/logrus-python-formatter
+.. image:: https://img.shields.io/travis/Robpol86/logrus-custom-formatter/master.svg?style=flat-square&label=Travis%20CI
+    :target: https://travis-ci.org/Robpol86/logrus-custom-formatter
     :alt: Build Status
 
-.. image:: https://img.shields.io/codecov/c/github/Robpol86/logrus-python-formatter/master.svg?style=flat-square&label=Codecov
-    :target: https://codecov.io/gh/Robpol86/logrus-python-formatter
+.. image:: https://img.shields.io/codecov/c/github/Robpol86/logrus-custom-formatter/master.svg?style=flat-square&label=Codecov
+    :target: https://codecov.io/gh/Robpol86/logrus-custom-formatter
     :alt: Coverage Status
 
 Quickstart
@@ -28,7 +28,7 @@ Install:
 
 .. code:: bash
 
-    go get https://github.com/Robpol86/logrus-python-formatter
+    go get github.com/Robpol86/logrus-custom-formatter
 
 Usage:
 
