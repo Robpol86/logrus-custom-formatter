@@ -158,14 +158,14 @@ func TestNewFormatterDetailed(t *testing.T) {
 				}
 			}
 			expected := []string{
-				"2016-10-30 19:12:17.149 %s DEBUG                      Sample debug 1.",
-				"2016-10-30 19:12:17.149 %s DEBUG LogMsgs              Sample debug 2. a=b c=10",
-				"2016-10-30 19:12:17.149 %s INFO                       Sample info 1.",
-				"2016-10-30 19:12:17.149 %s INFO  LogMsgs              Sample info 2. a=b c=10",
-				"2016-10-30 19:12:17.149 %s WARN                       Sample warn 1.",
-				"2016-10-30 19:12:17.149 %s WARN  LogMsgs              Sample warn 2. a=b c=10",
-				"2016-10-30 19:12:17.149 %s ERROR                      Sample error 1.",
-				"2016-10-30 19:12:17.149 %s ERROR LogMsgs              Sample error 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s DEBUG                        Sample debug 1.",
+				"2016-10-30 19:12:17.149 %s DEBUG   LogMsgs              Sample debug 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s INFO                         Sample info 1.",
+				"2016-10-30 19:12:17.149 %s INFO    LogMsgs              Sample info 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s WARNING                      Sample warn 1.",
+				"2016-10-30 19:12:17.149 %s WARNING LogMsgs              Sample warn 2. a=b c=10",
+				"2016-10-30 19:12:17.149 %s ERROR                        Sample error 1.",
+				"2016-10-30 19:12:17.149 %s ERROR   LogMsgs              Sample error 2. a=b c=10",
 				"",
 			}
 			for i, str := range expected {

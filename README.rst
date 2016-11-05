@@ -5,11 +5,9 @@ logrus-custom-formatter
 Customizable Logrus formatter similar in style to Python's
 `logging.Formatter <https://docs.python.org/3.6/library/logging.html#logrecord-attributes>`_.
 
-Windows support tested on Windows 10 after May 2016 with native ANSI color support. Previous versions of Windows won't
-display actual colors unless os.Stdout/err is intercepted and win32 API calls are made by another library. More info:
-https://github.com/Robpol86/colorclass/blob/c7ed6d/colorclass/windows.py#L113
-
 * Tested with Golang 1.7 on Linux, OS X, and Windows.
+
+📖 Full documentation: https://godoc.org/github.com/Robpol86/logrus-custom-formatter
 
 .. image:: https://img.shields.io/appveyor/ci/Robpol86/logrus-python-formatter/master.svg?style=flat-square&label=AppVeyor%20CI
     :target: https://ci.appveyor.com/project/Robpol86/logrus-python-formatter
@@ -36,7 +34,26 @@ Usage:
 
 .. code:: go
 
-    // TODO
+    package main
+
+    import (
+        lcf "github.com/Robpol86/logrus-custom-formatter"
+        "github.com/Sirupsen/logrus"
+    )
+
+    func main() {
+        template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
+        logrus.SetFormatter(lcf.NewFormatter(template, nil))
+        logrus.SetLevel(logrus.DebugLevel)
+
+        animal := logrus.Fields{"animal": "walrus", "size": 10}
+        logrus.WithFields(animal).Debug("A group of walrus emerges from the ocean")
+        logrus.WithFields(animal).Warn("The group's number increased tremendously!")
+        number := logrus.Fields{"number": 122, "omg": true}
+        logrus.WithFields(number).Info("A giant walrus appears!")
+        logrus.Error("Tremendously sized cow enters the ocean.")
+        logrus.Fatal("The ice breaks!")
+    }
 
 .. changelog-section-start
 

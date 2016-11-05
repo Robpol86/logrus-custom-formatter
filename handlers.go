@@ -97,12 +97,9 @@ func HandlerRelativeCreated(_ *logrus.Entry, _ *CustomFormatter) (interface{}, e
 	return int(time.Since(_startTime) / time.Second), nil
 }
 
-// HandlerShortLevelName returns the entry's short level name (e.g. "WARN").
+// HandlerShortLevelName returns the first 4 letters of the entry's level name (e.g. "WARN").
 func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
-	if entry.Level == logrus.WarnLevel {
-		return Color(entry, formatter, "WARN"), nil
-	}
-	return Color(entry, formatter, strings.ToUpper(entry.Level.String())), nil
+	return Color(entry, formatter, strings.ToUpper(entry.Level.String()[:4])), nil
 }
 
 // ParseTemplate parses the template string and prepares it for fmt.Sprintf() and keeps track of which handlers to use.

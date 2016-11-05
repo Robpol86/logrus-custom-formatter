@@ -15,7 +15,7 @@ const (
 	Message = `%[message]s\n`
 
 	// Detailed formatting logs padded columns including the running PID.
-	Detailed = `%[ascTime]s %-5[process]d %-5[shortLevelName]s %-20[name]s %[message]s%[fields]s\n`
+	Detailed = `%[ascTime]s %-5[process]d %-7[levelName]s %-20[name]s %[message]s%[fields]s\n`
 
 	// DefaultTimestampFormat is the default format used if the user does not specify their own.
 	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
