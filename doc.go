@@ -5,10 +5,10 @@ choose which columns to include in your log outputs.
 Windows Support
 
 Unlike Linux/OS X, Windows kind of doesn't support ANSI color codes. Windows versions before Windows 10 Insider Edition
-around May 2016 do not support ANSI color codes (instead your program is supposed to issue win32 API calls before each
-character to display if its color changes) and lcf will disable colors on those platforms by default. Windows version
-after that do actually support ANSI color codes but is disabled by default. lcf will detect this and disable colors by
-default if this feature (ENABLE_VIRTUAL_TERMINAL_PROCESSING) is not enabled.
+around May 2016 do not support ANSI color codes (instead your program is supposed to issue SetConsoleTextAttribute win32
+API calls before each character to display if its color changes) and lcf will disable colors on those platforms by
+default. Windows version after that do actually support ANSI color codes but is disabled by default. lcf will detect
+this and disable colors by default if this feature (ENABLE_VIRTUAL_TERMINAL_PROCESSING) is not enabled.
 
 You can enable ENABLE_VIRTUAL_TERMINAL_PROCESSING by calling lcf.WindowsEnableNativeANSI(true) in your program (logrus
 by default only outputs to stderr, call with false if you're printing to stdout instead). More information in the
@@ -27,8 +27,8 @@ Below is a simple example program that uses lcf with logrus:
 
 	func main() {
 		lcf.WindowsEnableNativeANSI(true)
-		template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
-		logrus.SetFormatter(lcf.NewFormatter(template, nil))
+		temp := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
+		logrus.SetFormatter(lcf.NewFormatter(temp, nil))
 		logrus.SetLevel(logrus.DebugLevel)
 
 		animal := logrus.Fields{"animal": "walrus", "size": 10}
@@ -50,13 +50,13 @@ Built-In Attributes
 
 These attributes are provided by lcf and can be specified in your template string:
 
-	%[ascTime]s		Timestamp with formatting defined in CustomFormatter.TimestampFormat.
-	%[fields]s		Logrus fields formatted as "key1=value key2=value". Keys sorted unless
-				CustomFormatter.DisableSorting is true.
+	%[ascTime]s		Timestamp with formatting from CustomFormatter.TimestampFormat.
+	%[fields]s		Logrus fields formatted as "key1=value key2=value". Keys sorted
+				unless CustomFormatter.DisableSorting is true.
 	%[levelName]s		The capitalized log level name (e.g. INFO, WARNING, ERROR).
 	%[message]s		The log message.
-	%[name]s		The value of the "name" field. If this attribute it used "name" will be
-				omitted in %[fields]s.
+	%[name]s		The value of the "name" field. If this attribute it used "name"
+				will be omitted in %[fields]s.
 	%[process]d		The current PID of the running process emitting log statements.
 	%[relativeCreated]d	Number of seconds since the program has started.
 	%[shortLevelName]s	Like %[levelName]s except WARNING is shown as "WARN".
