@@ -34,27 +34,11 @@ Usage:
 
 .. code:: go
 
-    package main
-
-    import (
-        lcf "github.com/Robpol86/logrus-custom-formatter"
-        "github.com/Sirupsen/logrus"
-    )
-
-    func main() {
-        lcf.WindowsEnableNativeANSI(true)
-        template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
-        logrus.SetFormatter(lcf.NewFormatter(template, nil))
-        logrus.SetLevel(logrus.DebugLevel)
-
-        animal := logrus.Fields{"animal": "walrus", "size": 10}
-        logrus.WithFields(animal).Debug("A group of walrus emerges from the ocean")
-        logrus.WithFields(animal).Warn("The group's number increased tremendously!")
-        number := logrus.Fields{"number": 122, "omg": true}
-        logrus.WithFields(number).Info("A giant walrus appears!")
-        logrus.Error("Tremendously sized cow enters the ocean.")
-        logrus.Fatal("The ice breaks!")
-    }
+    // import lcf "github.com/Robpol86/logrus-custom-formatter"
+    // import "github.com/Sirupsen/logrus"
+    lcf.WindowsEnableNativeANSI(true)
+    template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
+    logrus.SetFormatter(lcf.NewFormatter(template, nil))
 
 .. changelog-section-start
 

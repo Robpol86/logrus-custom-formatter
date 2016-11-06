@@ -1,7 +1,17 @@
 # Configure.
-language: go
+env: WHAT=tests
 go:
   - 1.7.3
+language: go
+matrix:
+  include:
+    - go: 1.7.3
+      env: WHAT=Example from doc.go
+      install:
+        - go get ./...
+        - mkdir $GOPATH/src/local; cd "$_"
+        - sed '1,/Example Usage/d;/And the output is:/,$d' $TRAVIS_BUILD_DIR/doc.go |tail -n +4 > main.go
+      script: go run main.go
 sudo: false
 
 # Run.

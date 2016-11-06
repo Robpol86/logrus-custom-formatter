@@ -37,7 +37,6 @@ Below is a simple example program that uses lcf with logrus:
 		number := logrus.Fields{"number": 122, "omg": true}
 		logrus.WithFields(number).Info("A giant walrus appears!")
 		logrus.Error("Tremendously sized cow enters the ocean.")
-		logrus.Fatal("The ice breaks!")
 	}
 
 And the output is:
@@ -46,8 +45,6 @@ And the output is:
 	WARN[0000] The group's number increased tremendously!    animal=walrus size=10
 	INFO[0000] A giant walrus appears!                       number=122 omg=true
 	ERRO[0000] Tremendously sized cow enters the ocean.
-	FATA[0000] The ice breaks!
-	exit status 1
 
 Built-In Attributes
 
