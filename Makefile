@@ -3,6 +3,7 @@ ALL_FILES = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 ALL_PKGS := $(shell glide nv |xargs go list)
 NAME := $(shell grep "^[^=]" README.rst |head -1)
 ALL_COVER := $(addsuffix /cover.out,$(subst github.com/Robpol86/${NAME},.,${ALL_PKGS}))
+GOPATH := $(subst \,/,${GOPATH})
 
 all: clean lint test
 
@@ -36,3 +37,8 @@ test: vendor clean ${ALL_COVER}
 fmt:
 	@echo Formatting Packages...
 	gofmt -l $(ALL_FILES) |xargs -L1 go fmt
+
+$(GOPATH)/src/local/main.go $(subst /,\,${GOPATH})\src\local\main.go:
+	mkdir -p $(GOPATH)/src/local
+	sed '1,/Example Usage/d;/And the output is:/,$$d' doc.go |tail -n +4 > $(GOPATH)/src/local/main.go
+	cd $(GOPATH)/src/local && go get ./...

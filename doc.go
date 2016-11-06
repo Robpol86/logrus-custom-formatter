@@ -50,14 +50,14 @@ Built-In Attributes
 
 These attributes are provided by lcf and can be specified in your template string:
 
-	%[ascTime]s		Timestamp with formatting from CustomFormatter.TimestampFormat.
-	%[fields]s		Logrus fields formatted as "key1=value key2=value". Keys sorted
-				unless CustomFormatter.DisableSorting is true.
+	%[ascTime]s		Timestamp formatted by CustomFormatter.TimestampFormat.
+	%[fields]s		Logrus fields formatted as "key1=value key2=value". Keys are
+				sorted unless CustomFormatter.DisableSorting is true.
 	%[levelName]s		The capitalized log level name (e.g. INFO, WARNING, ERROR).
 	%[message]s		The log message.
-	%[name]s		The value of the "name" field. If this attribute it used "name"
-				will be omitted in %[fields]s.
-	%[process]d		The current PID of the running process emitting log statements.
+	%[name]s		The value of the "name" field. If used "name" will be omitted
+				from %[fields]s.
+	%[process]d		The current PID of the process emitting log statements.
 	%[relativeCreated]d	Number of seconds since the program has started.
 	%[shortLevelName]s	Like %[levelName]s except WARNING is shown as "WARN".
 */

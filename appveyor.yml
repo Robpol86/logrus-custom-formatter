@@ -10,9 +10,7 @@ environment:
 # Run.
 build_script:
   - IF "%WHAT%" EQU "tests" make bootstrap
-  - IF "%WHAT%" NEQ "tests" md %GOPATH%\src\local && cd %GOPATH%\src\local
-  - IF "%WHAT%" NEQ "tests" sed '1,/Example Usage/d;/And the output is:/,$d' %APPVEYOR_BUILD_FOLDER%\doc.go |tail -n +4 > main.go
-  - IF "%WHAT%" NEQ "tests" go get ./...
+  - IF "%WHAT%" NEQ "tests" make %GOPATH%\src\local\main.go && cd %GOPATH%\src\local
 test_script:
   - IF "%WHAT%" EQU "tests" make
   - IF "%WHAT%" NEQ "tests" go run main.go

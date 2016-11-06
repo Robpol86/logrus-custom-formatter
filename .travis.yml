@@ -7,11 +7,10 @@ matrix:
   include:
     - go: 1.7.3
       env: WHAT=Example from doc.go
-      install:
-        - mkdir $GOPATH/src/local; cd $_
-        - sed '1,/Example Usage/d;/And the output is:/,$d' ~-/doc.go |tail -n +4 > main.go
-        - go get ./...
+      install: make $GOPATH/src/local/main.go && cd $(dirname $_)
       script: go run main.go
+      after_success:
+        - echo
 sudo: false
 
 # Run.
