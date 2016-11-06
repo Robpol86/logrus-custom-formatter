@@ -42,12 +42,12 @@ func TestHandlerAscTime(t *testing.T) {
 	assert := require.New(t)
 
 	// Setup.
-	formatter := CustomFormatter{TimestampFormat: DefaultTimestampFormat}
+	formatter := NewFormatter("", nil)
 	entry := logrus.NewEntry(logrus.New())
 	entry.Level = logrus.ErrorLevel
 
 	// Test.
-	fields, err := HandlerAscTime(entry, &formatter)
+	fields, err := HandlerAscTime(entry, formatter)
 	assert.NoError(err)
 	actual := fields.(string)
 	assert.Regexp(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}$`, actual)
@@ -57,12 +57,12 @@ func TestHandlerFields(t *testing.T) {
 	assert := require.New(t)
 
 	// Setup.
-	formatter := CustomFormatter{}
+	formatter := NewFormatter("", nil)
 	entry := logrus.NewEntry(logrus.New())
 	entry.Level = logrus.ErrorLevel
 
 	// Test with no data.
-	fields, err := HandlerFields(entry, &formatter)
+	fields, err := HandlerFields(entry, formatter)
 	assert.NoError(err)
 	actual := fields.(string)
 	assert.Equal("", actual)
@@ -74,7 +74,7 @@ func TestHandlerFields(t *testing.T) {
 	entry.Data["one"] = 1
 	entry.Data["two"] = "2"
 	entry.Data["3"] = false
-	fields, err = HandlerFields(entry, &formatter)
+	fields, err = HandlerFields(entry, formatter)
 	assert.NoError(err)
 	actual = fields.(string)
 	expected := " \033[31m3\033[0m=false \033[31mone\033[0m=1 \033[31mtwo\033[0m=2"
@@ -84,7 +84,7 @@ func TestHandlerFields(t *testing.T) {
 	formatter.DisableColors = true
 	formatter.DisableSorting = true
 	formatter.ForceColors = false
-	fields, err = HandlerFields(entry, &formatter)
+	fields, err = HandlerFields(entry, formatter)
 	assert.NoError(err)
 	actual = fields.(string)
 	assert.Contains(actual, "3=false")

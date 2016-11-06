@@ -37,10 +37,10 @@ func TestNewFormatterColors(t *testing.T) {
 			var expected []string
 			if tc == "force colors" {
 				expected = []string{
-					"\033[37mDEBUG\033[0m::Sample debug 1.",
-					"\033[37mDEBUG\033[0m:LogMsgs:Sample debug 2. \033[37ma\033[0m=b \033[37mc\033[0m=10",
-					"\033[34mINFO\033[0m::Sample info 1.",
-					"\033[34mINFO\033[0m:LogMsgs:Sample info 2. \033[34ma\033[0m=b \033[34mc\033[0m=10",
+					"\033[36mDEBUG\033[0m::Sample debug 1.",
+					"\033[36mDEBUG\033[0m:LogMsgs:Sample debug 2. \033[36ma\033[0m=b \033[36mc\033[0m=10",
+					"\033[32mINFO\033[0m::Sample info 1.",
+					"\033[32mINFO\033[0m:LogMsgs:Sample info 2. \033[32ma\033[0m=b \033[32mc\033[0m=10",
 					"\033[33mWARNING\033[0m::Sample warn 1.",
 					"\033[33mWARNING\033[0m:LogMsgs:Sample warn 2. \033[33ma\033[0m=b \033[33mc\033[0m=10",
 					"\033[31mERROR\033[0m::Sample error 1.",

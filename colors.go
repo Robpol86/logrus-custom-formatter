@@ -2,47 +2,53 @@ package lcf
 
 import (
 	"fmt"
-	"runtime"
 
 	"github.com/Sirupsen/logrus"
 )
 
 // ANSI color codes.
 const (
-	Red    = 31
-	Yellow = 33
-	Blue   = 34
-	Gray   = 37
+	AnsiReset     = 0
+	AnsiRed       = 31
+	AnsiHiRed     = 91
+	AnsiGreen     = 32
+	AnsiHiGreen   = 92
+	AnsiYellow    = 33
+	AnsiHiYellow  = 93
+	AnsiBlue      = 34
+	AnsiHiBlue    = 94
+	AnsiMagenta   = 35
+	AnsiHiMagenta = 95
+	AnsiCyan      = 36
+	AnsiHiCyan    = 96
+	AnsiWhite     = 37
+	AnsiHiWhite   = 97
 )
 
 // Color colorizes the input string and returns it with ANSI color codes.
 func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
-	// Determine if colors should be shown. Large if statement block for easier human readability.
-	isColored := false
-	if formatter.ForceColors {
-		isColored = true // ForceColors takes precedent.
-	} else if formatter.DisableColors {
-		// false.
-	} else if formatter.isTerminal && (runtime.GOOS != "windows" || formatter.isWindowsNativeAnsi) {
-		isColored = true
-	}
-
-	// Bail if colors are disabled.
-	if !isColored {
+	if !formatter.ForceColors && formatter.DisableColors {
 		return s
 	}
 
-	// Determine color.
+	// Determine color. Default is info.
 	var levelColor int
 	switch entry.Level {
 	case logrus.DebugLevel:
-		levelColor = Gray
+		levelColor = formatter.ColorDebug
 	case logrus.WarnLevel:
-		levelColor = Yellow
-	case logrus.ErrorLevel, logrus.FatalLevel, logrus.PanicLevel:
-		levelColor = Red
+		levelColor = formatter.ColorWarn
+	case logrus.ErrorLevel:
+		levelColor = formatter.ColorError
+	case logrus.PanicLevel:
+		levelColor = formatter.ColorPanic
+	case logrus.FatalLevel:
+		levelColor = formatter.ColorFatal
 	default:
-		levelColor = Blue
+		levelColor = formatter.ColorInfo
+	}
+	if levelColor == AnsiReset {
+		return s
 	}
 
 	// Colorize.

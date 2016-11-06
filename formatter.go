@@ -3,18 +3,19 @@ package lcf
 import (
 	"bytes"
 	"fmt"
+	"runtime"
 
 	"github.com/Sirupsen/logrus"
 )
 
 const (
-	// Basic formatting just logs the level name, name field, message and fields.
+	// Basic template just logs the level name, name field, message and fields.
 	Basic = `%[levelName]s:%[name]s:%[message]s%[fields]s\n`
 
-	// Message formatting just logs the message.
+	// Message template just logs the message.
 	Message = `%[message]s\n`
 
-	// Detailed formatting logs padded columns including the running PID.
+	// Detailed template logs padded columns including the running PID.
 	Detailed = `%[ascTime]s %-5[process]d %-7[levelName]s %-20[name]s %[message]s%[fields]s\n`
 
 	// DefaultTimestampFormat is the default format used if the user does not specify their own.
@@ -45,8 +46,13 @@ type CustomFormatter struct {
 	// that log extremely frequently this may not be desired.
 	DisableSorting bool
 
-	isTerminal          bool
-	isWindowsNativeAnsi bool
+	// Different colors for different log levels.
+	ColorDebug int
+	ColorInfo  int
+	ColorWarn  int
+	ColorError int
+	ColorFatal int
+	ColorPanic int
 }
 
 // Format is called by logrus and returns the formatted string.
@@ -75,10 +81,22 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 // 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
 func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter := CustomFormatter{
-		isTerminal:          logrus.IsTerminal(),
-		isWindowsNativeAnsi: WindowsNativeANSI(),
-		TimestampFormat:     DefaultTimestampFormat,
+		ColorDebug:      AnsiCyan,
+		ColorInfo:       AnsiGreen,
+		ColorWarn:       AnsiYellow,
+		ColorError:      AnsiRed,
+		ColorFatal:      AnsiMagenta,
+		ColorPanic:      AnsiMagenta,
+		TimestampFormat: DefaultTimestampFormat,
 	}
+
+	// Parse the template string.
 	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
+
+	// Disable colors if not supported.
+	if !logrus.IsTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
+		formatter.DisableColors = true
+	}
+
 	return &formatter
 }
