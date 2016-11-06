@@ -177,3 +177,25 @@ func TestNewFormatterDetailed(t *testing.T) {
 		})
 	}
 }
+
+func TestNewFormatterCustom(t *testing.T) {
+	template := `%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n`
+	for _, toFile := range []bool{false, true} {
+		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
+			assert := require.New(t)
+			actual := runFormatterTest(assert, template, toFile)
+			expected := []string{
+				"DEBU[0000] Sample debug 1.                              ",
+				"DEBU[0000] Sample debug 2.                               a=b c=10 name=LogMsgs",
+				"INFO[0000] Sample info 1.                               ",
+				"INFO[0000] Sample info 2.                                a=b c=10 name=LogMsgs",
+				"WARN[0000] Sample warn 1.                               ",
+				"WARN[0000] Sample warn 2.                                a=b c=10 name=LogMsgs",
+				"ERRO[0000] Sample error 1.                              ",
+				"ERRO[0000] Sample error 2.                               a=b c=10 name=LogMsgs",
+				"",
+			}
+			assert.Equal(expected, actual)
+		})
+	}
+}
