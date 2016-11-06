@@ -42,7 +42,7 @@ Usage:
     )
 
     func main() {
-        lcf.WindowsEnableNativeANSI(true) // Ignored on non-Windows.
+        lcf.WindowsEnableNativeANSI(true)
         template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
         logrus.SetFormatter(lcf.NewFormatter(template, nil))
         logrus.SetLevel(logrus.DebugLevel)

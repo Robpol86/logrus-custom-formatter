@@ -58,11 +58,11 @@ func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
 // WindowsNativeANSI returns true if either the stderr or stdout consoles natively support ANSI color codes. On
 // non-Windows platforms this always returns false.
 func WindowsNativeANSI() bool {
-	enabled, _ := windowsNativeANSI(true, false)
+	enabled, _ := windowsNativeANSI(true, false, nil)
 	if enabled {
 		return enabled
 	}
-	enabled, _ = windowsNativeANSI(false, false)
+	enabled, _ = windowsNativeANSI(false, false, nil)
 	return enabled
 }
 
@@ -70,6 +70,6 @@ func WindowsNativeANSI() bool {
 //
 // :param stderr: Issue SetConsoleMode win32 API call on stderr instead of stdout handle.
 func WindowsEnableNativeANSI(stderr bool) error {
-	_, err := windowsNativeANSI(stderr, true)
+	_, err := windowsNativeANSI(stderr, true, nil)
 	return err
 }
