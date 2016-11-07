@@ -40,6 +40,6 @@ fmt:
 
 $(GOPATH)/src/local/main.go $(subst /,\,${GOPATH})\src\local\main.go:
 	mkdir -p $(GOPATH)/src/local
-	sed '1,/Example Usage/d;/And the output is:/,$$d' doc.go |tail -n +4 > $(GOPATH)/src/local/main.go
+	sed '1,/Example Program/d;/And the output is:/,$$d' doc.go |tail -n +4 > $(GOPATH)/src/local/main.go
 	find $(GOPATH)/src -type d -name vendor -not -path "*/.git/*" -exec rm -rf '{}' ';'
 	cd $(GOPATH)/src/local && go get ./...

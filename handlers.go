@@ -11,8 +11,7 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-var _reBracketed = regexp.MustCompile(`%[\d-]*\[(\w+)]\w`)
-var _startTime = time.Now()
+var _reBracketed = regexp.MustCompile(`%[\d.-]*\[(\w+)]\w`)
 
 // Handler is the function signature of formatting attributes such as "levelName" and "message".
 type Handler func(*logrus.Entry, *CustomFormatter) (interface{}, error)
@@ -93,8 +92,8 @@ func HandlerProcess(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
 }
 
 // HandlerRelativeCreated returns the number of seconds since program start time.
-func HandlerRelativeCreated(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
-	return int(time.Since(_startTime) / time.Second), nil
+func HandlerRelativeCreated(_ *logrus.Entry, formatter *CustomFormatter) (interface{}, error) {
+	return int(time.Since(formatter.startTime) / time.Second), nil
 }
 
 // HandlerShortLevelName returns the first 4 letters of the entry's level name (e.g. "WARN").

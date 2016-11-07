@@ -21,6 +21,12 @@ Customizable Logrus formatter similar in style to Python's
     :target: https://codecov.io/gh/Robpol86/logrus-custom-formatter
     :alt: Coverage Status
 
+Example
+=======
+
+.. image:: examples.png?raw=true
+   :alt: Example from Documentation
+
 Quickstart
 ==========
 

@@ -95,13 +95,16 @@ func TestHandlerFields(t *testing.T) {
 func TestHandlerRelativeCreated(t *testing.T) {
 	assert := require.New(t)
 
+	// Setup.
+	formatter := NewFormatter("", nil)
+
 	// Test.
 	var values [2]int
-	fields, err := HandlerRelativeCreated(nil, nil)
+	fields, err := HandlerRelativeCreated(nil, formatter)
 	assert.NoError(err)
 	values[0] = fields.(int)
 	time.Sleep(time.Second * 2)
-	fields, err = HandlerRelativeCreated(nil, nil)
+	fields, err = HandlerRelativeCreated(nil, formatter)
 	assert.NoError(err)
 	values[1] = fields.(int)
 	assert.True(values[0] < values[1])

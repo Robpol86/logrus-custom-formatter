@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"runtime"
+	"time"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -53,6 +54,8 @@ type CustomFormatter struct {
 	ColorError int
 	ColorFatal int
 	ColorPanic int
+
+	startTime time.Time
 }
 
 // Format is called by logrus and returns the formatted string.
@@ -88,6 +91,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 		ColorFatal:      AnsiMagenta,
 		ColorPanic:      AnsiMagenta,
 		TimestampFormat: DefaultTimestampFormat,
+		startTime:       time.Now(),
 	}
 
 	// Parse the template string.

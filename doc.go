@@ -14,7 +14,7 @@ You can enable ENABLE_VIRTUAL_TERMINAL_PROCESSING by calling lcf.WindowsEnableNa
 by default only outputs to stderr, call with false if you're printing to stdout instead). More information in the
 WindowsEnableNativeANSI documentation below.
 
-Example Usage
+Example Program
 
 Below is a simple example program that uses lcf with logrus:
 
@@ -58,7 +58,8 @@ These attributes are provided by lcf and can be specified in your template strin
 	%[name]s		The value of the "name" field. If used "name" will be omitted
 				from %[fields]s.
 	%[process]d		The current PID of the process emitting log statements.
-	%[relativeCreated]d	Number of seconds since the program has started.
+	%[relativeCreated]d	Number of seconds since the program has started (since
+				formatter was created)
 	%[shortLevelName]s	Like %[levelName]s except WARNING is shown as "WARN".
 */
 package lcf
