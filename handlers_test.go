@@ -1,6 +1,7 @@
 package lcf
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -108,4 +109,35 @@ func TestHandlerRelativeCreated(t *testing.T) {
 	assert.NoError(err)
 	values[1] = fields.(int)
 	assert.True(values[0] < values[1])
+}
+
+func ExampleCustomHandlers() {
+	// Define your own handler for new or to override built-in attributes. Here we'll
+	// define LoadAverage() to handle a new %[loadAvg]f attribute.
+	LoadAverage := func(e *logrus.Entry, f *CustomFormatter) (interface{}, error) {
+		someNumber := 0.3
+		return someNumber, nil
+	}
+
+	// You can define additional formatting in the template string. Formatting is
+	// handled by fmt.Sprintf() after lcf converts keyed indexes to integer indexes.
+	template := "[%04[relativeCreated]d] %1.2[loadAvg]f %7[levelName]s %[message]s\n"
+	formatter := NewFormatter(template, CustomHandlers{"loadAvg": LoadAverage})
+
+	// Create a new logger or use the standard logger. Here we'll create a new one
+	// and configure it.
+	log := logrus.New()
+	log.Formatter = formatter
+	log.Level = logrus.DebugLevel
+	log.Out = os.Stdout
+	log.Debug("A group of walrus emerges from the ocean")
+	log.Warn("The group's number increased tremendously!")
+	log.Info("A giant walrus appears!")
+	log.Error("Tremendously sized cow enters the ocean.")
+
+	// Output:
+	// [0000] 0.30   DEBUG A group of walrus emerges from the ocean
+	// [0000] 0.30 WARNING The group's number increased tremendously!
+	// [0000] 0.30    INFO A giant walrus appears!
+	// [0000] 0.30   ERROR Tremendously sized cow enters the ocean.
 }

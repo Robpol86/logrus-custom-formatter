@@ -16,7 +16,14 @@ var _reBracketed = regexp.MustCompile(`%[\d.-]*\[(\w+)]\w`)
 // Handler is the function signature of formatting attributes such as "levelName" and "message".
 type Handler func(*logrus.Entry, *CustomFormatter) (interface{}, error)
 
-// CustomHandlers is a mapping of Handler values to attributes as key names (e.g. "levelName").
+// CustomHandlers is a mapping of Handler-type functions to attributes as key names (e.g. "levelName").
+//
+// With this type many custom handler functions can be defined and fed to NewFormatter(). CustomHandlers are parsed
+// first so you can override built-in handlers such as the one for %[ascTime]s with your own. Since they are exported
+// you can call built-in handlers in your own custom handler. The returned interface{} value is passed to fmt.Sprintf().
+//
+// In addition to overriding handlers you can create new attributes (such as %[myAttr]s) and map it to your Handler
+// function.
 type CustomHandlers map[string]Handler
 
 // Attributes is a map used like a "set" to keep track of which formatting attributes are used.

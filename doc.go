@@ -61,5 +61,11 @@ These attributes are provided by lcf and can be specified in your template strin
 	%[relativeCreated]d	Number of seconds since the program has started (since
 				formatter was created)
 	%[shortLevelName]s	Like %[levelName]s except WARNING is shown as "WARN".
+
+Custom Handlers
+
+If what you're looking for is not available in the above built-in attributes or not exactly the functionality that you
+want you can add new or override existing attributes with custom handlers. Read the documentation for the CustomHandlers
+type below for more information.
 */
 package lcf
