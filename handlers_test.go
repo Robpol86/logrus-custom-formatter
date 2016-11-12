@@ -30,7 +30,7 @@ func TestParseTemplateBuiltIn(t *testing.T) {
 
 	template, handlers, attributes := ParseTemplate(Basic, nil)
 
-	assert.Equal(`%[1]s:%[2]s:%[3]s%[4]s\n`, template)
+	assert.Equal("%[1]s:%[2]s:%[3]s%[4]s\n", template)
 	assert.Len(handlers, 4)
 	assert.Len(attributes, 4)
 	assert.True(attributes["levelName"])

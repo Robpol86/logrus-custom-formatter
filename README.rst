@@ -53,6 +53,11 @@ Changelog
 
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+Unreleased
+----------
+
+* Fixed newline characters in Basic, Message, and Detailed templates.
+
 1.0.0 - 2016-11-06
 ------------------
 

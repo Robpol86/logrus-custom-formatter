@@ -11,13 +11,13 @@ import (
 
 const (
 	// Basic template just logs the level name, name field, message and fields.
-	Basic = `%[levelName]s:%[name]s:%[message]s%[fields]s\n`
+	Basic = "%[levelName]s:%[name]s:%[message]s%[fields]s\n"
 
 	// Message template just logs the message.
-	Message = `%[message]s\n`
+	Message = "%[message]s\n"
 
 	// Detailed template logs padded columns including the running PID.
-	Detailed = `%[ascTime]s %-5[process]d %-7[levelName]s %-20[name]s %[message]s%[fields]s\n`
+	Detailed = "%[ascTime]s %-5[process]d %-7[levelName]s %-20[name]s %[message]s%[fields]s\n"
 
 	// DefaultTimestampFormat is the default format used if the user does not specify their own.
 	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
@@ -25,7 +25,7 @@ const (
 
 // CustomFormatter is the main formatter for the library.
 type CustomFormatter struct {
-	// Post-processed formatting template (e.g. `%[1]s:%[2]s:%[3]s\n`).
+	// Post-processed formatting template (e.g. "%[1]s:%[2]s:%[3]s\n").
 	Template string
 
 	// Handler functions whose indexes match up with Template Sprintf explicit argument indexes.
@@ -78,10 +78,10 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 // NewFormatter creates a new CustomFormatter, sets the Template string, and returns its pointer.
 // This function is usually called just once during a running program's lifetime.
 //
-// :param template: Pre-processed formatting template (e.g. `%[message]s\n`).
+// :param template: Pre-processed formatting template (e.g. "%[message]s\n").
 //
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
-// 	formatting string (e.g. `%[myFormatter]s`) and values are formatting functions.
+// 	formatting string (e.g. "%[myFormatter]s") and values are formatting functions.
 func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter := CustomFormatter{
 		ColorDebug:      AnsiCyan,

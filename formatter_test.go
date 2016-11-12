@@ -31,7 +31,7 @@ func TestNewFormatterColors(t *testing.T) {
 				LogMsgs()
 			})
 			assert.NoError(err)
-			actual := strings.Split(stderr, `\n`)
+			actual := strings.Split(stderr, "\n")
 
 			// Determine expected from test case.
 			var expected []string
@@ -98,9 +98,9 @@ func runFormatterTest(assert *require.Assertions, template string, toFile bool) 
 		assert.Empty(stderr)
 		contents, err := ioutil.ReadFile(logFile)
 		assert.NoError(err)
-		return strings.Split(string(contents), `\n`)
+		return strings.Split(string(contents), "\n")
 	}
-	return strings.Split(stderr, `\n`)
+	return strings.Split(stderr, "\n")
 }
 
 func TestNewFormatterBasic(t *testing.T) {
@@ -179,7 +179,7 @@ func TestNewFormatterDetailed(t *testing.T) {
 }
 
 func TestNewFormatterCustom(t *testing.T) {
-	template := `%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n`
+	template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
 	for _, toFile := range []bool{false, true} {
 		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
 			assert := require.New(t)
