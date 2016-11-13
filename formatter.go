@@ -25,7 +25,7 @@ const (
 
 // CustomFormatter is the main formatter for the library.
 type CustomFormatter struct {
-	// Post-processed formatting template (e.g. "%[1]s:%[2]s:%[3]s\n").
+	// Post-processed formatting template (e.g. "%s:%s:%s\n").
 	Template string
 
 	// Handler functions whose indexes match up with Template Sprintf explicit argument indexes.

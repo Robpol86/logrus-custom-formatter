@@ -151,7 +151,7 @@ func (f *CustomFormatter) ParseTemplate(template string, custom CustomHandlers) 
 	// Substitute attribute names with Handler indexes in reverse.
 	for i := len(positions) - 1; i >= 0; i-- {
 		pos := positions[i]
-		template = fmt.Sprintf("%s%d%s", template[:pos[0]], i+1, template[pos[1]:])
+		template = template[:pos[0]-1] + template[pos[1]+1:]
 	}
 	f.Template = template
 }

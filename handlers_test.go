@@ -19,7 +19,7 @@ func TestCustomFormatter_ParseTemplateCustom(t *testing.T) {
 	formatter := &CustomFormatter{}
 	formatter.ParseTemplate("%[one]d %[two]s", map[string]Handler{"one": handlerOne})
 
-	assert.Equal("%[1]d %[two]s", formatter.Template)
+	assert.Equal("%d %[two]s", formatter.Template)
 	assert.Len(formatter.Handlers, 1)
 	assert.Len(formatter.Attributes, 1)
 	assert.True(formatter.Attributes["one"])
@@ -31,7 +31,7 @@ func TestCustomFormatter_ParseTemplateBuiltIn(t *testing.T) {
 	formatter := &CustomFormatter{}
 	formatter.ParseTemplate(Basic, nil)
 
-	assert.Equal("%[1]s:%[2]s:%[3]s%[4]s\n", formatter.Template)
+	assert.Equal("%s:%s:%s%s\n", formatter.Template)
 	assert.Len(formatter.Handlers, 4)
 	assert.Len(formatter.Attributes, 4)
 	assert.True(formatter.Attributes["levelName"])

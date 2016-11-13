@@ -1,7 +1,7 @@
 package lcf
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -52,7 +52,7 @@ func Color(entry *logrus.Entry, formatter *CustomFormatter, s string) string {
 	}
 
 	// Colorize.
-	return fmt.Sprintf("\033[%dm%s\033[0m", levelColor, s)
+	return "\033[" + strconv.Itoa(levelColor) + "m" + s + "\033[0m"
 }
 
 // WindowsNativeANSI returns true if either the stderr or stdout consoles natively support ANSI color codes. On
