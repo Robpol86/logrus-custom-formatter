@@ -13,30 +13,31 @@ func handlerOne(_ *logrus.Entry, _ *CustomFormatter) (interface{}, error) {
 	return nil, nil
 }
 
-func TestParseTemplateCustom(t *testing.T) {
+func TestCustomFormatter_ParseTemplateCustom(t *testing.T) {
 	assert := require.New(t)
 
-	custom := map[string]Handler{"one": handlerOne}
-	template, handlers, attributes := ParseTemplate("%[one]d %[two]s", custom)
+	formatter := &CustomFormatter{}
+	formatter.ParseTemplate("%[one]d %[two]s", map[string]Handler{"one": handlerOne})
 
-	assert.Equal("%[1]d %[two]s", template)
-	assert.Len(handlers, 1)
-	assert.Len(attributes, 1)
-	assert.True(attributes["one"])
+	assert.Equal("%[1]d %[two]s", formatter.Template)
+	assert.Len(formatter.Handlers, 1)
+	assert.Len(formatter.Attributes, 1)
+	assert.True(formatter.Attributes["one"])
 }
 
-func TestParseTemplateBuiltIn(t *testing.T) {
+func TestCustomFormatter_ParseTemplateBuiltIn(t *testing.T) {
 	assert := require.New(t)
 
-	template, handlers, attributes := ParseTemplate(Basic, nil)
+	formatter := &CustomFormatter{}
+	formatter.ParseTemplate(Basic, nil)
 
-	assert.Equal("%[1]s:%[2]s:%[3]s%[4]s\n", template)
-	assert.Len(handlers, 4)
-	assert.Len(attributes, 4)
-	assert.True(attributes["levelName"])
-	assert.True(attributes["name"])
-	assert.True(attributes["message"])
-	assert.True(attributes["fields"])
+	assert.Equal("%[1]s:%[2]s:%[3]s%[4]s\n", formatter.Template)
+	assert.Len(formatter.Handlers, 4)
+	assert.Len(formatter.Attributes, 4)
+	assert.True(formatter.Attributes["levelName"])
+	assert.True(formatter.Attributes["name"])
+	assert.True(formatter.Attributes["message"])
+	assert.True(formatter.Attributes["fields"])
 }
 
 func TestHandlerAscTime(t *testing.T) {

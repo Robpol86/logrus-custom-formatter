@@ -95,7 +95,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	}
 
 	// Parse the template string.
-	formatter.Template, formatter.Handlers, formatter.Attributes = ParseTemplate(template, custom)
+	formatter.ParseTemplate(template, custom)
 
 	// Disable colors if not supported.
 	if !logrus.IsTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {

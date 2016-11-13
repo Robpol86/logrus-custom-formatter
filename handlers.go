@@ -113,39 +113,38 @@ func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (int
 // :param template: Pre-processed formatting template (e.g. "%[message]s\n").
 //
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
-func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, Attributes) {
-	attributes := make(Attributes)
-	var handlers []Handler
+func (f *CustomFormatter) ParseTemplate(template string, custom CustomHandlers) {
+	f.Attributes = make(Attributes)
 	var positions [][2]int
 
-	// Find attribute names to replace and with what handler function to map them to.
 	for _, idxs := range _reBracketed.FindAllStringSubmatchIndex(template, -1) {
+		// Find attribute names to replace and with what handler function to map them to.
 		attribute := template[idxs[2]:idxs[3]]
-		if f, ok := custom[attribute]; ok {
-			handlers = append(handlers, f)
+		if fn, ok := custom[attribute]; ok {
+			f.Handlers = append(f.Handlers, fn)
 		} else {
 			switch attribute {
 			case "ascTime":
-				handlers = append(handlers, HandlerAscTime)
+				f.Handlers = append(f.Handlers, HandlerAscTime)
 			case "fields":
-				handlers = append(handlers, HandlerFields)
+				f.Handlers = append(f.Handlers, HandlerFields)
 			case "levelName":
-				handlers = append(handlers, HandlerLevelName)
+				f.Handlers = append(f.Handlers, HandlerLevelName)
 			case "name":
-				handlers = append(handlers, HandlerName)
+				f.Handlers = append(f.Handlers, HandlerName)
 			case "message":
-				handlers = append(handlers, HandlerMessage)
+				f.Handlers = append(f.Handlers, HandlerMessage)
 			case "process":
-				handlers = append(handlers, HandlerProcess)
+				f.Handlers = append(f.Handlers, HandlerProcess)
 			case "relativeCreated":
-				handlers = append(handlers, HandlerRelativeCreated)
+				f.Handlers = append(f.Handlers, HandlerRelativeCreated)
 			case "shortLevelName":
-				handlers = append(handlers, HandlerShortLevelName)
+				f.Handlers = append(f.Handlers, HandlerShortLevelName)
 			default:
 				continue
 			}
 		}
-		attributes[attribute] = true
+		f.Attributes[attribute] = true
 		positions = append(positions, [...]int{idxs[2], idxs[3]})
 	}
 
@@ -154,6 +153,5 @@ func ParseTemplate(template string, custom CustomHandlers) (string, []Handler, A
 		pos := positions[i]
 		template = fmt.Sprintf("%s%d%s", template[:pos[0]], i+1, template[pos[1]:])
 	}
-
-	return template, handlers, attributes
+	f.Template = template
 }
