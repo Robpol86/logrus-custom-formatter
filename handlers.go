@@ -152,6 +152,16 @@ func (f *CustomFormatter) ParseTemplate(template string, custom CustomHandlers) 
 			segments = append(segments, template[segmentsPos:idxs[0]])
 		}
 
+		// Keep track of padded (y-x > 0) string (== 's') attributes for ANSI color handling.
+		if template[idxs[6]:idxs[7]] == "s" && idxs[3]-idxs[2] > 0 {
+			start := 0
+			for _, s := range segments {
+				start += len(s)
+			}
+			end := start + idxs[3] - idxs[0] + idxs[7] - idxs[6]
+			f.handleColors = append(f.handleColors, [...]int{len(f.Handlers) - 1, start, end})
+		}
+
 		// Update segments.
 		segments = append(segments, template[idxs[0]:idxs[3]]+template[idxs[6]:idxs[7]])
 		segmentsPos = idxs[1]

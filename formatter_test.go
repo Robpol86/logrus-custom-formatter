@@ -67,7 +67,7 @@ func TestNewFormatterColors(t *testing.T) {
 	}
 }
 
-func runFormatterTest(assert *require.Assertions, template string, toFile bool) []string {
+func runFormatterTest(assert *require.Assertions, template string, toFile, forceColors bool) []string {
 	var logFile string
 	if toFile {
 		tmpdir, err := ioutil.TempDir("", "")
@@ -79,7 +79,9 @@ func runFormatterTest(assert *require.Assertions, template string, toFile bool) 
 	defer ResetLogger() // Cleanup after test.
 	_, stderr, err := WithCapSys(func() {
 		ResetLogger()
-		logrus.SetFormatter(NewFormatter(template, nil))
+		formatter := NewFormatter(template, nil)
+		formatter.ForceColors = forceColors
+		logrus.SetFormatter(formatter)
 		logrus.SetLevel(logrus.DebugLevel)
 		if toFile {
 			pathMap := lfshook.PathMap{}
@@ -107,7 +109,7 @@ func TestNewFormatterBasic(t *testing.T) {
 	for _, toFile := range []bool{false, true} {
 		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
 			assert := require.New(t)
-			actual := runFormatterTest(assert, Basic, toFile)
+			actual := runFormatterTest(assert, Basic, toFile, false)
 			expected := []string{
 				"DEBUG::Sample debug 1.",
 				"DEBUG:LogMsgs:Sample debug 2. a=b c=10",
@@ -128,7 +130,7 @@ func TestNewFormatterMessage(t *testing.T) {
 	for _, toFile := range []bool{false, true} {
 		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
 			assert := require.New(t)
-			actual := runFormatterTest(assert, Message, toFile)
+			actual := runFormatterTest(assert, Message, toFile, false)
 			expected := []string{
 				"Sample debug 1.",
 				"Sample debug 2.",
@@ -151,7 +153,7 @@ func TestNewFormatterDetailed(t *testing.T) {
 	for _, toFile := range []bool{false, true} {
 		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
 			assert := require.New(t)
-			actual := runFormatterTest(assert, Detailed, toFile)
+			actual := runFormatterTest(assert, Detailed, toFile, false)
 			for i, str := range actual {
 				if str != "" {
 					actual[i] = reTimestamp.ReplaceAllString(str, "2016-10-30 19:12:17.149")
@@ -178,12 +180,41 @@ func TestNewFormatterDetailed(t *testing.T) {
 	}
 }
 
+func TestNewFormatterDetailedColor(t *testing.T) {
+	assert := require.New(t)
+	actual := runFormatterTest(assert, Detailed, false, true)
+	reTimestamp := regexp.MustCompile(`^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d{3}`)
+	for i, str := range actual {
+		if str != "" {
+			actual[i] = reTimestamp.ReplaceAllString(str, "2016-10-30 19:12:17.149")
+		}
+	}
+	expected := []string{
+		"2016-10-30 19:12:17.149 %s \033[36mDEBUG\033[0m                        Sample debug 1.",
+		"2016-10-30 19:12:17.149 %s \033[36mDEBUG\033[0m   LogMsgs              Sample debug 2. \033[36ma\033[0m=b \033[36mc\033[0m=10",
+		"2016-10-30 19:12:17.149 %s \033[32mINFO\033[0m                         Sample info 1.",
+		"2016-10-30 19:12:17.149 %s \033[32mINFO\033[0m    LogMsgs              Sample info 2. \033[32ma\033[0m=b \033[32mc\033[0m=10",
+		"2016-10-30 19:12:17.149 %s \033[33mWARNING\033[0m                      Sample warn 1.",
+		"2016-10-30 19:12:17.149 %s \033[33mWARNING\033[0m LogMsgs              Sample warn 2. \033[33ma\033[0m=b \033[33mc\033[0m=10",
+		"2016-10-30 19:12:17.149 %s \033[31mERROR\033[0m                        Sample error 1.",
+		"2016-10-30 19:12:17.149 %s \033[31mERROR\033[0m   LogMsgs              Sample error 2. \033[31ma\033[0m=b \033[31mc\033[0m=10",
+		"",
+	}
+	for i, str := range expected {
+		if str != "" {
+			expected[i] = fmt.Sprintf(str, fmt.Sprintf("%-5d", os.Getpid()))
+		}
+	}
+	assert.Equal(expected, actual)
+
+}
+
 func TestNewFormatterCustom(t *testing.T) {
 	template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
 	for _, toFile := range []bool{false, true} {
 		t.Run(fmt.Sprintf("toFile:%v", toFile), func(t *testing.T) {
 			assert := require.New(t)
-			actual := runFormatterTest(assert, template, toFile)
+			actual := runFormatterTest(assert, template, toFile, false)
 			expected := []string{
 				"DEBU[0000] Sample debug 1.                              ",
 				"DEBU[0000] Sample debug 2.                               a=b c=10 name=LogMsgs",

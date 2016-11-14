@@ -53,10 +53,13 @@ Changelog
 
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
-Unreleased
-----------
+1.0.1 - 2016-11-14
+------------------
 
-* Fixed newline characters in Basic, Message, and Detailed templates.
+Fixed
+    * Newline characters in Basic, Message, and Detailed templates.
+    * String padding alignment with ANSI color text (log level names).
+    * https://github.com/Robpol86/logrus-custom-formatter/issues/2
 
 1.0.0 - 2016-11-06
 ------------------

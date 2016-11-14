@@ -49,3 +49,107 @@ func TestColor(t *testing.T) {
 		})
 	}
 }
+
+func TestCustomFormatter_SprintfNoColors(t *testing.T) {
+	assert := require.New(t)
+
+	// len(f.handleColors) == 0
+	formatter := NewFormatter("%[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("AAA", formatter.Sprintf("AAA"))
+	assert.Equal("AA", formatter.Sprintf("AA"))
+	assert.Equal("A", formatter.Sprintf("A"))
+	assert.Equal("", formatter.Sprintf(""))
+
+	// No \033
+	formatter = NewFormatter("%2[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("AAA", formatter.Sprintf("AAA"))
+	assert.Equal("AA", formatter.Sprintf("AA"))
+	assert.Equal(" A", formatter.Sprintf("A"))
+	assert.Equal("  ", formatter.Sprintf(""))
+
+	// Multiple no \033
+	formatter = NewFormatter("%2[shortLevelName]s %2[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("AAA BBB", formatter.Sprintf("AAA", "BBB"))
+	assert.Equal("AA BB", formatter.Sprintf("AA", "BB"))
+	assert.Equal(" A  B", formatter.Sprintf("A", "B"))
+	assert.Equal("     ", formatter.Sprintf("", ""))
+}
+
+func TestCustomFormatter_SprintfColors(t *testing.T) {
+	assert := require.New(t)
+
+	formatter := NewFormatter("%10[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("       \033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("        \033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("         \033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("          \033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("          \033[0m", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%-10[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m       ", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m        ", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m         ", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m          ", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m          ", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%2[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal(" \033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("  \033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("  \033[0m", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%-2[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m ", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m  ", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m  ", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%1[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal(" \033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal(" \033[0m", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%-1[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m ", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m ", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%0[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%-0[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m", formatter.Sprintf("\033[0m"))
+
+	formatter = NewFormatter("%-[shortLevelName]s", nil)
+	formatter.ForceColors = true
+	assert.Equal("\033[31mAAA\033[0m", formatter.Sprintf("\033[31mAAA\033[0m"))
+	assert.Equal("\033[31mAA\033[0m", formatter.Sprintf("\033[31mAA\033[0m"))
+	assert.Equal("\033[31mA\033[0m", formatter.Sprintf("\033[31mA\033[0m"))
+	assert.Equal("\033[31m\033[0m", formatter.Sprintf("\033[31m\033[0m"))
+	assert.Equal("\033[0m", formatter.Sprintf("\033[0m"))
+}

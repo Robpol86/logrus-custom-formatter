@@ -2,7 +2,6 @@ package lcf
 
 import (
 	"bytes"
-	"fmt"
 	"runtime"
 	"time"
 
@@ -55,7 +54,8 @@ type CustomFormatter struct {
 	ColorFatal int
 	ColorPanic int
 
-	startTime time.Time
+	handleColors [][3]int
+	startTime    time.Time
 }
 
 // Format is called by logrus and returns the formatted string.
@@ -71,7 +71,7 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	// Parse template and return.
-	parsed := fmt.Sprintf(f.Template, values...)
+	parsed := f.Sprintf(values...)
 	return bytes.NewBufferString(parsed).Bytes(), nil
 }
 
