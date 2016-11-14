@@ -11,7 +11,7 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
-var _reBracketed = regexp.MustCompile(`%[\d.-]*\[(\w+)]\w`)
+var _reBracketed = regexp.MustCompile(`%([\d.-]*)\[(\w+)](\w)`)
 
 // Handler is the function signature of formatting attributes such as "levelName" and "message".
 type Handler func(*logrus.Entry, *CustomFormatter) (interface{}, error)
@@ -115,11 +115,12 @@ func HandlerShortLevelName(entry *logrus.Entry, formatter *CustomFormatter) (int
 // :param custom: User-defined formatters evaluated before built-in formatters. Keys are attributes to look for in the
 func (f *CustomFormatter) ParseTemplate(template string, custom CustomHandlers) {
 	f.Attributes = make(Attributes)
-	var positions [][2]int
+	segments := []string{}
+	segmentsPos := 0
 
 	for _, idxs := range _reBracketed.FindAllStringSubmatchIndex(template, -1) {
 		// Find attribute names to replace and with what handler function to map them to.
-		attribute := template[idxs[2]:idxs[3]]
+		attribute := template[idxs[4]:idxs[5]]
 		if fn, ok := custom[attribute]; ok {
 			f.Handlers = append(f.Handlers, fn)
 		} else {
@@ -145,13 +146,22 @@ func (f *CustomFormatter) ParseTemplate(template string, custom CustomHandlers) 
 			}
 		}
 		f.Attributes[attribute] = true
-		positions = append(positions, [...]int{idxs[2], idxs[3]})
+
+		// Add segments of the template that do not match regexp (between attributes).
+		if segmentsPos < idxs[0] {
+			segments = append(segments, template[segmentsPos:idxs[0]])
+		}
+
+		// Update segments.
+		segments = append(segments, template[idxs[0]:idxs[3]]+template[idxs[6]:idxs[7]])
+		segmentsPos = idxs[1]
 	}
 
-	// Substitute attribute names with Handler indexes in reverse.
-	for i := len(positions) - 1; i >= 0; i-- {
-		pos := positions[i]
-		template = template[:pos[0]-1] + template[pos[1]+1:]
+	// Add trailing segments of the template that did not match the regexp (newline).
+	if segmentsPos < len(template) {
+		segments = append(segments, template[segmentsPos:])
 	}
-	f.Template = template
+
+	// Join segments.
+	f.Template = strings.Join(segments, "")
 }
