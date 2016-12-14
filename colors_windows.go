@@ -1,6 +1,7 @@
 package lcf
 
 import (
+	"os"
 	"syscall"
 )
 
@@ -35,6 +36,13 @@ func (s *sysCall) setConsoleMode(mode uintptr) (r1 uintptr, err error) {
 
 // Does this console window have ENABLE_VIRTUAL_TERMINAL_PROCESSING enabled? Optionally try to enable if not.
 func windowsNativeANSI(stderr bool, setMode bool, sc sysCaller) (enabled bool, err error) {
+	// Check if ANSI is supported by means of ANSICON or ConEmu first.
+	isAnsicon := (os.Getenv("ANSICON") != "" && os.Getenv("ANSICON_VER") != "")
+	isConEmu := os.Getenv("ConEmuANSI") == "ON"
+	if isAnsicon || isConEmu {
+		return true, nil
+	}
+
 	if sc == nil {
 		if stderr {
 			sc = &sysCall{nStdHandle: syscall.STD_ERROR_HANDLE}
