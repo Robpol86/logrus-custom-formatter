@@ -2,6 +2,7 @@ package lcf
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -27,6 +28,57 @@ func (s *MockSysCall) getConsoleMode(mode *uint32) error {
 func (s *MockSysCall) setConsoleMode(mode uintptr) (uintptr, error) {
 	s.mode = uint32(mode)
 	return s.setConsoleModeR1, s.setConsoleModeError
+}
+
+// Clear any environment variables indicating colors are supported by ANSICON or ConEmu.
+func disableNonnative() {
+	os.Setenv("ConEmuANSI", "")
+	os.Setenv("ANSICON", "")
+	os.Setenv("ANSICON_VER", "")
+}
+
+// Enable ConEmu ANSI support.
+func enableConEmu() {
+	os.Setenv("ConEmuANSI", "ON")
+}
+
+// Enable ConEmu ANSI support.
+func enableANSICON() {
+	// Typical ANSICON environment variables.
+	os.Setenv("ANSICON", "80x300")
+	os.Setenv("ANSICON_VER", "166")
+}
+
+// Keep native disabled and test nonnative color support.
+func Test_windowsNativeANSI_NonNative(t *testing.T) {
+	assert := require.New(t)
+	sc := &MockSysCall{3, nil, nil, 1, nil}
+
+	// No nonnative support.
+	disableNonnative()
+	enabled, err := windowsNativeANSI(false, false, sc)
+	assert.NoError(err)
+	assert.False(enabled)
+
+	// Enable ConEmu color support.
+	enableConEmu()
+	enabled, err = windowsNativeANSI(false, false, sc)
+	assert.NoError(err)
+	assert.True(enabled)
+	disableNonnative()
+
+	// Enable ANSICON color support.
+	enableANSICON()
+	enabled, err = windowsNativeANSI(false, false, sc)
+	assert.NoError(err)
+	assert.True(enabled)
+
+	// Enable ConEmu now, meaning both are enabled.
+	enableConEmu()
+	enabled, err = windowsNativeANSI(false, false, sc)
+	assert.NoError(err)
+	assert.True(enabled)
+	disableNonnative()
 }
 
 func Test_windowsNativeANSI_Good(t *testing.T) {
