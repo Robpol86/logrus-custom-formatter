@@ -51,27 +51,27 @@ func Test_windowsNativeANSI_Good(t *testing.T) {
 
 func Test_windowsNativeANSI_BadSet(t *testing.T) {
 	assert := require.New(t)
-	sc := &MockSysCall{3, nil, nil, 0, errors.New("The parameter is incorrect.")}
+	sc := &MockSysCall{3, nil, nil, 0, errors.New("the parameter is incorrect")}
 
 	enabled, err := windowsNativeANSI(false, true, sc)
-	assert.EqualError(err, "The parameter is incorrect.")
+	assert.EqualError(err, "the parameter is incorrect")
 	assert.False(enabled)
 }
 
 func Test_windowsNativeANSI_BadGetConsole(t *testing.T) {
 	assert := require.New(t)
-	sc := &MockSysCall{3, nil, errors.New("The handle is invalid."), 1, nil}
+	sc := &MockSysCall{3, nil, errors.New("the handle is invalid"), 1, nil}
 
 	enabled, err := windowsNativeANSI(false, false, sc)
-	assert.EqualError(err, "The handle is invalid.")
+	assert.EqualError(err, "the handle is invalid")
 	assert.False(enabled)
 }
 
 func Test_windowsNativeANSI_BadGetMode(t *testing.T) {
 	assert := require.New(t)
-	sc := &MockSysCall{3, errors.New("The handle is invalid."), nil, 1, nil}
+	sc := &MockSysCall{3, errors.New("the handle is invalid"), nil, 1, nil}
 
 	enabled, err := windowsNativeANSI(false, false, sc)
-	assert.EqualError(err, "The handle is invalid.")
+	assert.EqualError(err, "the handle is invalid")
 	assert.False(enabled)
 }
