@@ -98,7 +98,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter.ParseTemplate(template, custom)
 
 	// Disable colors if not supported.
-	if !logrus.IsTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI() && !WindowsNonNativeANSI()) {
+	if !logrus.IsTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
 		formatter.DisableColors = true
 	}
 
