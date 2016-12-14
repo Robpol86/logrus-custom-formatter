@@ -2,7 +2,9 @@ package lcf
 
 import (
 	"fmt"
+	"os"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -140,6 +142,18 @@ func WindowsNativeANSI() bool {
 	}
 	enabled, _ = windowsNativeANSI(false, false, nil)
 	return enabled
+}
+
+// Returns true if environment variables indicating non-native ANSI support by ANSICON or ConEmu are found.
+// On non-Windows platforms this always returns false.
+func WindowsNonNativeANSI() bool {
+	if runtime.GOOS != "windows" {
+		return false
+	}
+
+	isAnsicon := (os.Getenv("ANSICON") != "" && os.Getenv("ANSICON_VER") != "")
+	isConEmu := os.Getenv("ConEmuANSI") == "ON"
+	return isAnsicon || isConEmu
 }
 
 // WindowsEnableNativeANSI will attempt to set ENABLE_VIRTUAL_TERMINAL_PROCESSING on a console using SetConsoleMode.
