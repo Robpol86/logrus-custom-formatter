@@ -144,7 +144,7 @@ func WindowsNativeANSI() bool {
 	return enabled
 }
 
-// Returns true if environment variables indicating non-native ANSI support by ANSICON or ConEmu are found.
+// WindowsNonNativeANSI returns true if environment variables indicating non-native ANSI support by ANSICON or ConEmu are found.
 // On non-Windows platforms this always returns false.
 func WindowsNonNativeANSI() bool {
 	if runtime.GOOS != "windows" {
