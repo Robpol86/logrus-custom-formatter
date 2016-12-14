@@ -21,7 +21,7 @@ func TestWindowsEnableNativeANSI(t *testing.T) {
 		assert.EqualError(WindowsEnableNativeANSI(true), "The handle is invalid.")
 		assert.EqualError(WindowsEnableNativeANSI(false), "The handle is invalid.")
 	} else {
-		assert.EqualError(WindowsEnableNativeANSI(false), "Not available on this platform.")
+		assert.EqualError(WindowsEnableNativeANSI(false), "not available on this platform")
 	}
 }
 

@@ -7,5 +7,5 @@ import (
 )
 
 func windowsNativeANSI(_ bool, _ bool, _ interface{}) (bool, error) {
-	return false, errors.New("Not available on this platform.")
+	return false, errors.New("not available on this platform")
 }
