@@ -1,6 +1,6 @@
 package: github.com/Robpol86/logrus-custom-formatter
 import:
-- package: github.com/Sirupsen/logrus
+- package: github.com/sirupsen/logrus
 testImport:
 - package: github.com/stretchr/testify
   subpackages:

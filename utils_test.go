@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // WithCapSys temporarily redirects stdout/stderr pipes to capture the output while the function runs. Returns them as
