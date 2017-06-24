@@ -41,7 +41,7 @@ Usage:
 .. code:: go
 
     // import lcf "github.com/Robpol86/logrus-custom-formatter"
-    // import "github.com/Sirupsen/logrus"
+    // import "github.com/sirupsen/logrus"
     lcf.WindowsEnableNativeANSI(true)
     template := "%[shortLevelName]s[%04[relativeCreated]d] %-45[message]s%[fields]s\n"
     logrus.SetFormatter(lcf.NewFormatter(template, nil))

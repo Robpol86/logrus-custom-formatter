@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -98,7 +98,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter.ParseTemplate(template, custom)
 
 	// Disable colors if not supported.
-	if !logrus.IsTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
+	if !logrus.IsTerminal(logrus.StandardLogger().Out) || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
 		formatter.DisableColors = true
 	}
 
