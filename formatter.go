@@ -2,10 +2,12 @@ package lcf
 
 import (
 	"bytes"
+	"os"
 	"runtime"
 	"time"
 
 	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
@@ -21,6 +23,12 @@ const (
 	// DefaultTimestampFormat is the default format used if the user does not specify their own.
 	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
 )
+
+// isTerminal returns a boolean reflecting if output is to a valid terminal
+func isTerminal() bool {
+	lo, ok := logrus.StandardLogger().Out.(*os.File)
+	return ok && terminal.IsTerminal(int(lo.Fd()))
+}
 
 // CustomFormatter is the main formatter for the library.
 type CustomFormatter struct {
@@ -98,7 +106,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter.ParseTemplate(template, custom)
 
 	// Disable colors if not supported.
-	if !logrus.IsTerminal(logrus.StandardLogger().Out) || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
+	if isTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
 		formatter.DisableColors = true
 	}
 
