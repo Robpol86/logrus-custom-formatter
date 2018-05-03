@@ -24,7 +24,7 @@ const (
 	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
 )
 
-// isTerminal returns a boolean reflecting if output is to a valid terminal
+// isTerminal returns a boolean reflecting if output is to a valid terminal. Based on fix https://github.com/sirupsen/logrus/issues/607 to address the removal of logrus.IsTerminal()
 func isTerminal() bool {
 	lo, ok := logrus.StandardLogger().Out.(*os.File)
 	return ok && terminal.IsTerminal(int(lo.Fd()))
