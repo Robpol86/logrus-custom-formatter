@@ -106,7 +106,7 @@ func NewFormatter(template string, custom CustomHandlers) *CustomFormatter {
 	formatter.ParseTemplate(template, custom)
 
 	// Disable colors if not supported.
-	if isTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
+	if !isTerminal() || (runtime.GOOS == "windows" && !WindowsNativeANSI()) {
 		formatter.DisableColors = true
 	}
 
