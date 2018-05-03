@@ -1,24 +1,32 @@
-hash: d832e250b10ab01dd4f5d523eb1f231df784338793cccdd8659c609957369cb2
-updated: 2017-06-23T14:24:37.496273481+02:00
+hash: 1ed6309b0c3c740c2be485398cd48456bca11e19261d938c611688641654732b
+updated: 2018-05-03T14:19:00.036124727+02:00
 imports:
 - name: github.com/sirupsen/logrus
-  version: 202f25545ea4cf9b191ff7f846df5d87c9382c2b
-  - name: golang.org/x/sys
-  version: b699b7032584f0953262cb2788a0ca19bb494703
+  version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
+- name: golang.org/x/crypto
+  version: 8b1d31080a7692e075c4681cb2458454a1fe0706
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: bb9c189858d91f42db229b04d45a4c3d23a7662a
   subpackages:
   - unix
+  - windows
 testImports:
 - name: github.com/davecgh/go-spew
-  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  version: 8991bc29aa16c548c550c7ff78260e27b9ab7c73
   subpackages:
   - spew
 - name: github.com/pmezard/go-difflib
-  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
-    subpackages:
-    - difflib
-  - name: github.com/rifflock/lfshook
-  version: ""
-- name: github.com/stretchr/testify
-  version: ""
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
   subpackages:
+  - difflib
+- name: github.com/rifflock/lfshook
+  version: 3f9d976bd7402de39b46357069fb6325a974572e
+- name: github.com/Sirupsen/logrus
+  version: 778f2e774c725116edbc3d039dc0dfc1cc62aae8
+- name: github.com/stretchr/testify
+  version: c679ae2cc0cb27ec3293fea7e254e47386f05d69
+  subpackages:
+  - assert
   - require

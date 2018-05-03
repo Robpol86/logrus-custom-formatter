@@ -2,6 +2,9 @@ package: github.com/Robpol86/logrus-custom-formatter
 import:
 - package: github.com/sirupsen/logrus
   version: ^1.0.0
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh/terminal
 testImport:
 - package: github.com/stretchr/testify
   subpackages:
